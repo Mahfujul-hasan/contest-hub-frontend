@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap');
+
 @import "tailwindcss";
  @plugin "daisyui" {
    themes: light --default;
@@ -9,7 +11,7 @@
   --color-secondary: #E0F7FA;
   --color-accent: #FFB74D;
   --color-accent-content: #0A2A49;
-  --color-base-content: #6C757D;
+  --color-neutral:#00000000
   --color-info: #3ABFF8;
 
 }
@@ -20,4 +22,8 @@ nav a.active{
 }
 nav a:hover{
   @apply bg-transparent 
+}
+
+*{
+  font-family: "Urbanist", sans-serif;
 }

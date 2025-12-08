@@ -1,8 +1,11 @@
 import React from "react";
 import { Link, NavLink } from "react-router";
 import Logo from "../../../components/Logo/Logo";
+import useAuth from "../../../hook/useAuth";
 
 const Navbar = () => {
+    const {user, logOut}=useAuth();
+    console.log(user);
   const links = (
     <>
       <li className="text-lg font-semibold">
@@ -12,7 +15,16 @@ const Navbar = () => {
         <NavLink to="all-contests">All Contests</NavLink>
       </li>
     </>
+    
   );
+
+  const handleLogout=()=>{
+    logOut()
+    .then()
+    .catch(error=>{
+        console.log(error);
+    })
+  }
   return (
     <div className="bg-base-100 sticky top-0 left-0 right-0">
       <nav className="navbar max-w-7xl mx-auto px-10 shadow-sm ">
@@ -50,21 +62,13 @@ const Navbar = () => {
           <ul className="menu menu-horizontal px-1">{links}</ul>
         </div>
         <div className="navbar-end space-x-3">
-          <Link to="/register">
-            <button className="btn text-base font-bold text-primary  border-2 border-primary bg-transparent rounded-3xl">
-              Sign UP
-            </button>
-          </Link>
-          <Link to="/login">
-            <button className="btn bg-primary text-base text-white font-bold rounded-3xl">
-              Login
-            </button>
-          </Link>
-          <div className="dropdown dropdown-end ">
+          {
+            user? <>
+            <div className="dropdown dropdown-end ">
             <div tabIndex={0}>
               <Link>
                 <img
-                  src="https://www.transparentpng.com/download/user/gray-user-profile-icon-png-fP8Q1P.png"
+                  src={user.photoURL}
                   alt=""
                   className="w-12 rounded-full border-2 border-primary"
                 />
@@ -75,17 +79,31 @@ const Navbar = () => {
               className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm mt-5 "
             >
               <li className="">
-                <h3 className="mx-auto text-xl font-bold text-primary hover:bg-transparent">Mahfujul</h3>
+                <h3 className="mx-auto text-xl font-bold text-primary hover:bg-transparent">{user.displayName}</h3>
               </li>
               <li className="border-b border-info  font-bold text-base">
-                <Link>Dashboard</Link>
+                <Link to="/dashboard">Dashboard</Link>
               </li>
               <li className="mt-3 ">
-                <Link className="btn border-2 border-primary  text-primary text-base font-bold bg-transparent">Log out</Link>
+                <Link onClick={handleLogout} className="btn border-2 border-primary  text-primary text-base font-bold bg-transparent">Log out</Link>
               </li>
               
             </ul>
           </div>
+            </> : <>
+            <Link to="/register">
+            <button className="btn text-base font-bold text-primary  border-2 border-primary bg-transparent rounded-3xl">
+              Sign UP
+            </button>
+          </Link>
+          <Link to="/login">
+            <button className="btn bg-primary text-base text-white font-bold rounded-3xl">
+              Login
+            </button>
+          </Link>
+            </>
+          }
+          
         </div>
       </nav>
     </div>
