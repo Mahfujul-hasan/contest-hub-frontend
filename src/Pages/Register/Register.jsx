@@ -40,6 +40,9 @@ const Register = () => {
             <input type="password" className="input" placeholder="Confirm password" {...register("confirmPassword",{required:"Confirm your password", validate:(value)=>value === passwordValue || "Password do not match"})} />
             {errors.confirmPassword&& <p className="text-red-400 font-medium">{errors.confirmPassword.message}</p>}
 
+            <label className="label">Confirm password</label>
+            <input type="file" className="file-input file-input-ghost" />
+
             {/* register button  */}
             <button className="btn btn-neutral mt-4">Register</button>
           </fieldset>
