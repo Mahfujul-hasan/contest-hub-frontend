@@ -2,7 +2,7 @@ import React from "react";
 
 const Banner = () => {
   return (
-    <div className="mx-10 rounded-2xl bg-linear-65 from-indigo-500 via-purple-500 to-pink-500 p-10 space-y-5 mt-10">
+    <div className=" rounded-2xl bg-linear-65 from-indigo-500 via-purple-500 to-pink-500 py-10 space-y-5 mt-10">
       <h3 className="text-4xl font-bold text-white text-center">
         Discover & Host Amazing <br />
         Creative Contests
