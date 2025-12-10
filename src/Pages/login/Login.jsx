@@ -1,22 +1,25 @@
 import { useForm } from 'react-hook-form';
 import webLogo from '../../assets/contestHubLogo.png';
-import { Link, useNavigate } from 'react-router';
+import { Link, useLocation, useNavigate } from 'react-router';
 import SocialLogin from '../../components/socialLogin/SocialLogin';
 import useAuth from '../../hook/useAuth';
 
 const Login = () => {
     const {loginUser}=useAuth();
-    const navigate =useNavigate()
+    const navigate =useNavigate();
+    const location =useLocation()
     const {register, handleSubmit, formState:{errors}}=useForm();
     const handleLogin=(data)=>{
         loginUser(data.email, data.password)
         .then(res=>{
             console.log(res.user);
-            navigate('/')
+            navigate(location.state || "/")
 
         })
 
     }
+
+   
     return (
         <div className="min-h-screen max-w-[1440px] mx-auto grid grid-cols-2 items-center">
               <div className="bg-secondary h-full flex items-center">
@@ -46,8 +49,8 @@ const Login = () => {
                         <Link className='underline text-primary font-bold'>Forget password?</Link>
                     </div>
         
-                    {/* register button  */}
-                    <button className="btn btn-neutral mt-4">Login</button>
+                    {/* login button  */}
+                    <button className="btn btn-primary mt-4">Login</button>
                   </fieldset>
                 </form>
                 <p className='text-center mt-5'>Haven't any account? please <Link to="/register" className='link text-primary'>Register</Link></p>

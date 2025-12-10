@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import ContestCard from '../../../components/ContestCard/ContestCard';
+import { Link } from 'react-router';
 
 const PopularContests = () => {
     const{isLoading,data:contests}=useQuery({
@@ -22,6 +23,9 @@ const PopularContests = () => {
                 {
                     contests.map(contest=><ContestCard contest={contest}/>)
                 }
+            </div>
+            <div className='mt-10 text-center'>
+                <Link to="/all-contests"><button className='btn btn-info text-white px-8 text-base font-bold'>See All</button></Link>
             </div>
         </div>
     );

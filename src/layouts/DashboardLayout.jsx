@@ -1,38 +1,49 @@
 import React from "react";
-import { Link } from "react-router";
+import { Link, Outlet } from "react-router";
+import Logo from "../components/Logo/Logo";
+import { IoHome, IoSettingsOutline } from "react-icons/io5";
+import { RiMedal2Fill } from "react-icons/ri";
+import { AiOutlineMenuUnfold } from "react-icons/ai";
+import { MdSpaceDashboard } from "react-icons/md";
+import useAuth from "../hook/useAuth";
+import useAxiosSecure from "../hook/useAxiosSecure";
+import { useQuery } from "@tanstack/react-query";
+import { BsFillPersonFill } from "react-icons/bs";
 
 const DashboardLayout = () => {
+  const {user}=useAuth();
+  const axiosSecure= useAxiosSecure();
+    const {data:userRole}=useQuery({
+        queryKey:["users",user.email],
+        queryFn:async()=>{
+            const res = await axiosSecure.get(`/users/${user.email}/role`)
+            return res.data.role
+            
+        }
+    })
   return (
-    <div className="drawer lg:drawer-open">
+    <div className="drawer lg:drawer-open max-w-7xl mx-auto">
       <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
       <div className="drawer-content">
         {/* Navbar */}
-        <nav className="navbar w-full bg-base-300">
-          <label
+        <nav className="navbar w-full bg-white rounded-2xl shadow-md my-3">
+          <div className="navbar-start">
+            <label
             htmlFor="my-drawer-4"
             aria-label="open sidebar"
             className="btn btn-square btn-ghost"
           >
             {/* Sidebar toggle icon */}
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              strokeLinejoin="round"
-              strokeLinecap="round"
-              strokeWidth="2"
-              fill="none"
-              stroke="currentColor"
-              className="my-1.5 inline-block size-4"
-            >
-              <path d="M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"></path>
-              <path d="M9 4v16"></path>
-              <path d="M14 10l2 2l-2 2"></path>
-            </svg>
+            <AiOutlineMenuUnfold size={24} />
           </label>
-          <div className="px-4">Navbar Title</div>
+          <div className="px-4 text-2xl font-bold text-transparent bg-clip-text bg-linear-65 from-indigo-500 via-purple-500 to-pink-500">ContestHub Dashboard</div>
+          </div>
+          <div className="navbar-end mx-5">
+            <img src={user.photoURL} alt=""  className="w-14 rounded-full border-2 border-primary p-0.5"/>
+          </div>
         </nav>
         {/* Page content here */}
-        <div className="p-4">Page Content</div>
+        <Outlet/>
       </div>
 
       <div className="drawer-side is-drawer-close:overflow-visible">
@@ -41,56 +52,82 @@ const DashboardLayout = () => {
           aria-label="close sidebar"
           className="drawer-overlay"
         ></label>
-        <div className="flex min-h-full flex-col items-start bg-base-200 is-drawer-close:w-14 is-drawer-open:w-64">
+        <div className="flex min-h-full flex-col items-start bg-white is-drawer-close:w-14 is-drawer-open:w-64 rounded-2xl mx-3 shadow-lg ">
           {/* Sidebar content here */}
           <ul className="menu w-full grow">
             {/* List item */}
             <li>
+                <div className="is-drawer-close:hidden"><Logo /></div>
+            </li>
+
+
+            {/* List item-Home */}
+            <li className="mt-5 text-primary">
               <Link to="/"
-                className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                className="is-drawer-close:tooltip is-drawer-close:tooltip-bottom tooltip-primary"
                 data-tip="Homepage"
               >
                 {/* Home icon */}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  strokeLinejoin="round"
-                  strokeLinecap="round"
-                  strokeWidth="2"
-                  fill="none"
-                  stroke="currentColor"
-                  className="my-1.5 inline-block size-4"
-                >
-                  <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"></path>
-                  <path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                </svg>
-                <span className="is-drawer-close:hidden">Homepage</span>
+                <IoHome size={18} />
+                <span className="is-drawer-close:hidden text-base font-bold">Homepage</span>
               </Link>
             </li>
 
-            {/* List item */}
-            <li>
+
+            {/* List item-dashboard */}
+            <li className="mt-5 text-primary">
+              <Link to="/dashboard"
+                className="is-drawer-close:tooltip is-drawer-close:tooltip-bottom tooltip-primary"
+                data-tip="Dashboard"
+              >
+                {/* Dashboard icon */}
+                <MdSpaceDashboard size={18} />
+                <span className="is-drawer-close:hidden text-base font-bold">Dashboard</span>
+              </Link>
+            </li>
+
+
+            {
+              userRole==="user" 
+              && <>
+              
+              {/* List item-My participated contests */}
+              <li className="text-primary mt-3">
+              
+              <Link to="/dashboard/my-participated-contests"
+                className="is-drawer-close:tooltip is-drawer-close:tooltip-bottom tooltip-primary"
+                data-tip="My Participated Contests"
+              >
+                
+                <RiMedal2Fill size={18} />
+                <span className="is-drawer-close:hidden text-base font-bold">My Participated Contests</span>
+              </Link>
+            </li>
+
+              {/* List item-My profile */}
+              <li className="text-primary mt-3">
+              
+              <Link to="/dashboard/my-profile"
+                className="is-drawer-close:tooltip is-drawer-close:tooltip-bottom tooltip-primary"
+                data-tip="My Profile"
+              >
+                
+                <BsFillPersonFill size={18} />
+                <span className="is-drawer-close:hidden text-base font-bold">My Profile</span>
+              </Link>
+            </li>
+            </>
+            }
+
+            {/* List item-Settings */}
+            <li className="text-primary mt-3">
               <button
-                className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                className="is-drawer-close:tooltip is-drawer-close:tooltip-bottom tooltip-primary"
                 data-tip="Settings"
               >
                 {/* Settings icon */}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  strokeLinejoin="round"
-                  strokeLinecap="round"
-                  strokeWidth="2"
-                  fill="none"
-                  stroke="currentColor"
-                  className="my-1.5 inline-block size-4"
-                >
-                  <path d="M20 7h-9"></path>
-                  <path d="M14 17H5"></path>
-                  <circle cx="17" cy="17" r="3"></circle>
-                  <circle cx="7" cy="7" r="3"></circle>
-                </svg>
-                <span className="is-drawer-close:hidden">Settings</span>
+                <IoSettingsOutline size={18} />
+                <span className="is-drawer-close:hidden text-base font-medium">Settings</span>
               </button>
             </li>
           </ul>

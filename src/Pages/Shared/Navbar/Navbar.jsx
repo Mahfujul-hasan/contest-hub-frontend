@@ -5,7 +5,7 @@ import useAuth from "../../../hook/useAuth";
 
 const Navbar = () => {
     const {user, logOut}=useAuth();
-    console.log(user);
+
   const links = (
     <>
       <li className="text-lg font-semibold">
@@ -26,7 +26,7 @@ const Navbar = () => {
     })
   }
   return (
-    <div className="bg-base-100 sticky top-0 left-0 right-0">
+    <div className="bg-base-100 sticky top-0 left-0 right-0 z-10">
       <nav className="navbar max-w-7xl mx-auto px-10 shadow-sm ">
         <div className="navbar-start">
           <div className="dropdown">

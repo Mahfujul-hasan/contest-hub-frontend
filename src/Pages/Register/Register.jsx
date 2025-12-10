@@ -5,9 +5,12 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router";
 import SocialLogin from "../../components/socialLogin/SocialLogin";
 import useAuth from "../../hook/useAuth";
+import useAxiosSecure from "../../hook/useAxiosSecure";
+import Swal from "sweetalert2";
 
 const Register = () => {
   const { createUser, updateUserProfile, user } = useAuth();
+  const axiosSecure = useAxiosSecure();
   const navigate = useNavigate();
   const {
     register,
@@ -19,6 +22,7 @@ const Register = () => {
 
   const handleRegister = async (data) => {
     const profileImage = data.photoURL[0];
+
     createUser(data.email, data.password, data.displayName)
       .then(() => {
         const formData = new FormData();
@@ -27,29 +31,43 @@ const Register = () => {
           import.meta.env.VITE_IMGBB_KEY
         }`;
 
-        axios
-          .post(url, formData)
-          .then((res) => {
-           const photoURL= res.data?.data?.url;
-           const updateUser = {
-            displayName:data.displayName,
-            photoURL: photoURL
-           }
+        axios.post(url, formData).then((res) => {
+          const photoURL = res.data?.data?.url;
+          const updateUser = {
+            displayName: data.displayName,
+            photoURL: photoURL,
+          };
 
-           updateUserProfile(updateUser)
-           .then(()=>{
-            navigate('/login')
-           })
-           .catch(error=>{
-            console.log(error);
-           })
-           
+          const userInfo = {
+            displayName: data.displayName,
+            email: data.email,
+            photoURL: photoURL,
+          };
+
+          axiosSecure.post("/users", userInfo).then((res) => {
+            if (res.data.insertedId) {
+              console.log("the user is added");
+            }
+          }).catch(error=>{console.log(error);});
+          updateUserProfile(updateUser)
+            .then(() => {
+              navigate("/login");
+              Swal.fire({
+                position: "center",
+                icon: "success",
+                title: "Your registration have been done. please login",
+                showConfirmButton: false,
+                timer: 2000,
+              });
+            })
+            .catch((error) => {
+              console.log(error);
+            });
         });
       })
       .catch((error) => {
         console.log(error);
       });
-
 
     console.log(user);
   };
@@ -148,7 +166,7 @@ const Register = () => {
             />
 
             {/* register button  */}
-            <button className="btn btn-neutral mt-4">Register</button>
+            <button className="btn btn-primary mt-4">Register</button>
           </fieldset>
         </form>
         <p className="text-center">
