@@ -13,6 +13,7 @@ import { FiPlusCircle } from "react-icons/fi";
 
 const DashboardLayout = () => {
   const {user}=useAuth();
+  
   const axiosSecure= useAxiosSecure();
     const {data:userRole}=useQuery({
         queryKey:["users",user.email],
@@ -22,6 +23,7 @@ const DashboardLayout = () => {
             
         }
     })
+    
   return (
     <div className="drawer lg:drawer-open max-w-7xl mx-auto">
       <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />

@@ -10,7 +10,7 @@ import { PiMedalFill } from 'react-icons/pi';
 const Dashboard = () => {
     const{user}=useAuth();
     const axiosSecure= useAxiosSecure();
-    const {data:userRole}=useQuery({
+    const {data:userRole, isLoading}=useQuery({
         queryKey:["users",user.email],
         queryFn:async()=>{
             const res = await axiosSecure.get(`/users/${user.email}/role`)
@@ -18,6 +18,9 @@ const Dashboard = () => {
             
         }
     })
+    if(isLoading){
+        return <p>loading..</p>
+    }
 
     console.log(userRole);
     return (

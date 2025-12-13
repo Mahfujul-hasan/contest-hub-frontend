@@ -1,12 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
 import addContestImg from "../../../assets/create_contest.png";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import useAxiosSecure from "../../../hook/useAxiosSecure";
 import { useForm } from "react-hook-form";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 const ContestUpdate = () => {
   const { id } = useParams();
+  const navigate=useNavigate();
   const axiosSecure = useAxiosSecure();
   const{register, handleSubmit,formState:{errors}}=useForm()
   const { data: contest, isLoading } = useQuery({
@@ -30,7 +32,7 @@ const ContestUpdate = () => {
         const res= await axios.post(url,formData)
         const contestImage=res.data.data.image.url;
         console.log(contestImage);
-        const contestInfo= {
+        const updatedInfo= {
             contestName:data.contestName,
             contestImage:contestImage,
             contestDescription:data.description,
@@ -41,8 +43,22 @@ const ContestUpdate = () => {
             deadline:data.contestDeadline
 
         }
+        axiosSecure.patch(`/contests/${id}`,updatedInfo)
+        .then(res=>{
+            if(res.data.modifiedCount){
+                navigate('/dashboard/my-contests')
+                Swal.fire({
+                          position: "center",
+                          icon: "success",
+                          title: "Your contest has been updated!",
+                          showConfirmButton: false,
+                          timer: 1500,
+                        });
+            }
+            console.log(res.data);
+        })
 
-        console.log(contestInfo);
+        console.log(updatedInfo);
 
 
   }
