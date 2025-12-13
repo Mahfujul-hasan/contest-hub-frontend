@@ -3,6 +3,7 @@ import React from "react";
 import useAuth from "../../../hook/useAuth";
 import useAxiosSecure from "../../../hook/useAxiosSecure";
 import { Link } from "react-router";
+import Swal from "sweetalert2";
 
 const MyContests = () => {
   const { user } = useAuth();
@@ -14,6 +15,32 @@ const MyContests = () => {
       return res.data;
     },
   });
+
+  const handleDeleteContest = (id) => {
+    Swal.fire({
+      title: "Are you agree to delete this contest?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axiosSecure.delete(`contests/${id}`).then((res) => {
+          if (res.data.deletedCount) {
+            Swal.fire({
+              title: "Deleted!",
+              text: "Your contest has been deleted.",
+              icon: "success",
+            }).then(()=>{
+                window.location.reload()
+            });
+          }
+        });
+      }
+    });
+  };
   console.log(contests);
   return (
     <div>
@@ -35,27 +62,45 @@ const MyContests = () => {
             </tr>
           </thead>
           <tbody>
-            {contests.map((contest,index) => (
-                <tr key={contest._id}>
-                  <th>{index+1}</th>
-                  <td>{contest.contestName}</td>
-                  <td>{contest.contestType}</td>
-                  <td>{contest.deadline}</td>
-                  <td>{contest.status}</td>
-                  <td>
-                    {
-                    contest.status==="pending"
-                    ? <><Link to={`/dashboard/my-contests/${contest._id}`}><button className="btn mr-2">Edit</button></Link>
-                    <button className="btn">Delete</button></>
-                    :<>
-                    <button className="btn mr-2" disabled>Edit</button>
-                    <button className="btn" disabled>Delete</button></>
-                }
-                    
-                  </td>
-                  <td><Link><button className="btn bg-purple-200 text-purple-700 rounded-full">See submission</button></Link></td>
-                </tr>
-
+            {contests.map((contest, index) => (
+              <tr key={contest._id}>
+                <th>{index + 1}</th>
+                <td>{contest.contestName}</td>
+                <td>{contest.contestType}</td>
+                <td>{contest.deadline}</td>
+                <td>{contest.status}</td>
+                <td>
+                  {contest.status === "pending" ? (
+                    <>
+                      <Link to={`/dashboard/my-contests/${contest._id}`}>
+                        <button className="btn mr-2">Edit</button>
+                      </Link>
+                      <button
+                        onClick={() => handleDeleteContest(contest._id)}
+                        className="btn"
+                      >
+                        Delete
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <button className="btn mr-2" disabled>
+                        Edit
+                      </button>
+                      <button className="btn" disabled>
+                        Delete
+                      </button>
+                    </>
+                  )}
+                </td>
+                <td>
+                  <Link>
+                    <button className="btn bg-purple-200 text-purple-700 rounded-full">
+                      See submission
+                    </button>
+                  </Link>
+                </td>
+              </tr>
             ))}
           </tbody>
         </table>

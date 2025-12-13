@@ -58,9 +58,6 @@ const ContestUpdate = () => {
             console.log(res.data);
         })
 
-        console.log(updatedInfo);
-
-
   }
 //   console.log(contest);
   return (

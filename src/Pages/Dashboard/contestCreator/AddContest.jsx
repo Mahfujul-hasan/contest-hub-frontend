@@ -6,67 +6,67 @@ import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../../hook/useAxiosSecure";
 import Swal from "sweetalert2";
 const AddContest = () => {
-    const {user}=useAuth();
-    const axiosSecure =useAxiosSecure()
-    const {register,
+  const { user } = useAuth();
+  const axiosSecure = useAxiosSecure();
+  const {
+    register,
     handleSubmit,
-    formState: { errors }}=useForm();
-    const {data:currentUser}=useQuery({
-        queryKey:["user",user?.email],
-        queryFn:async()=>{
-            const res =await axiosSecure.get(`/users/${user.email}`);
-            return res.data;
-        }
-    })
+    reset,
+    formState: { errors },
+  } = useForm();
+  const { data: currentUser } = useQuery({
+    queryKey: ["user", user?.email],
+    queryFn: async () => {
+      const res = await axiosSecure.get(`/users/${user.email}`);
+      return res.data;
+    },
+  });
 
-    const handleContestSubmit=async(data)=>{
+  const handleContestSubmit = async (data) => {
+    const contestImg = data.contestImage[0];
+    const formData = new FormData();
+    formData.append("image", contestImg);
+    const url = `https://api.imgbb.com/1/upload?expiration=600&key=${
+      import.meta.env.VITE_IMGBB_KEY
+    }`;
+    const res = await axios.post(url, formData);
+    const contestImage = res.data.data.image.url;
+    const contestInfo = {
+      contestName: data.contestName,
+      contestImage: contestImage,
+      contestDescription: data.description,
+      entryPrice: data.entryPrice,
+      prizeMoney: data.prizeMoney,
+      contestType: data.contestType,
+      taskInstruction: data.taskInstruction,
+      deadline: data.contestDeadline,
+      creatorId: currentUser._id,
+      creatorName: data.creatorName,
+      creatorEmail: data.creatorEmail,
+      status: "pending",
+      participantsCount: null,
+      winnerId: null,
+      winnerName: null,
+      winnerPhoto: null,
+      createdAt: new Date(),
+    };
+
+    axiosSecure.post("/contests", contestInfo).then((res) => {
+      if (res.data.insertedId) {
         
-        const contestImg=data.contestImage[0]
-        const formData = new FormData();
-        formData.append("image",contestImg);
-        const url = `https://api.imgbb.com/1/upload?expiration=600&key=${import.meta.env.VITE_IMGBB_KEY}`
-        const res= await axios.post(url,formData)
-        const contestImage=res.data.data.image.url;
-        const contestInfo= {
-            contestName:data.contestName,
-            contestImage:contestImage,
-            contestDescription:data.description,
-            entryPrice:data.entryPrice,
-            prizeMoney:data.prizeMoney,
-            contestType:data.contestType,
-            taskInstruction:data.taskInstruction,
-            deadline:data.contestDeadline,
-            creatorId:currentUser._id,
-            creatorName:data.creatorName,
-            creatorEmail:data.creatorEmail,
-            status:"pending",
-            participantsCount:null,
-            winnerId:null,
-            winnerName:null,
-            winnerPhoto:null,
-            createdAt:new Date()
-
-
-        }
-
-        axiosSecure.post('/contests',contestInfo)
-        .then(res=>{
-            if(res.data.insertedId){
-                
-                Swal.fire({
-                          position: "center",
-                          icon: "success",
-                          title: "Your contest has been created!",
-                          showConfirmButton: false,
-                          timer: 1500,
-                        });
-                        window.location.reload()
-            }
-            
-        })
-        console.log(contestInfo);
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Your contest has been created!",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        reset();
         
-    }
+      }
+    });
+    console.log(contestInfo);
+  };
   return (
     <div className="grid grid-cols-5 items-center  my-10 mx-3 shadow-md border border-gray-200 rounded-3xl">
       <div className="col-span-2 h-full">
@@ -89,9 +89,13 @@ const AddContest = () => {
                   placeholder="Your Name"
                   defaultValue={user.displayName}
                   readOnly
-                  {...register('creatorName',{required:"Name is required"})}
+                  {...register("creatorName", { required: "Name is required" })}
                 />
-                {errors.creatorName&&<p className="text-red-500 font-bold">{errors.creatorName.message}</p>}
+                {errors.creatorName && (
+                  <p className="text-red-500 font-bold">
+                    {errors.creatorName.message}
+                  </p>
+                )}
               </div>
 
               {/* creator email  */}
@@ -103,9 +107,15 @@ const AddContest = () => {
                   placeholder="Your Email"
                   defaultValue={user.email}
                   readOnly
-                  {...register('creatorEmail',{required:"Email is required"})}
+                  {...register("creatorEmail", {
+                    required: "Email is required",
+                  })}
                 />
-                {errors.creatorEmail&&<p className="text-red-500 font-bold">{errors.creatorEmail.message}</p>}
+                {errors.creatorEmail && (
+                  <p className="text-red-500 font-bold">
+                    {errors.creatorEmail.message}
+                  </p>
+                )}
               </div>
             </div>
 
@@ -118,9 +128,15 @@ const AddContest = () => {
                   type="text"
                   className="input w-full"
                   placeholder="Contest Name"
-                  {...register('contestName',{required:"Contest Name is required"})}
+                  {...register("contestName", {
+                    required: "Contest Name is required",
+                  })}
                 />
-                {errors.contestName&&<p className="text-red-500 font-bold">{errors.contestName.message}</p>}
+                {errors.contestName && (
+                  <p className="text-red-500 font-bold">
+                    {errors.contestName.message}
+                  </p>
+                )}
               </div>
 
               <div>
@@ -129,9 +145,15 @@ const AddContest = () => {
                 <input
                   type="file"
                   className="file-input file-input-ghost w-full"
-                  {...register('contestImage',{required:"Contest Image is required"})}
+                  {...register("contestImage", {
+                    required: "Contest Image is required",
+                  })}
                 />
-                {errors.contestImage&&<p className="text-red-500 font-bold">{errors.contestImage.message}</p>}
+                {errors.contestImage && (
+                  <p className="text-red-500 font-bold">
+                    {errors.contestImage.message}
+                  </p>
+                )}
               </div>
             </div>
 
@@ -143,9 +165,15 @@ const AddContest = () => {
                   type="text"
                   className="input"
                   placeholder="Set Entry Price"
-                  {...register('entryPrice',{required:"Entry price is required"})}
+                  {...register("entryPrice", {
+                    required: "Entry price is required",
+                  })}
                 />
-                {errors.entryPrice&&<p className="text-red-500 font-bold">{errors.entryPrice.message}</p>}
+                {errors.entryPrice && (
+                  <p className="text-red-500 font-bold">
+                    {errors.entryPrice.message}
+                  </p>
+                )}
               </div>
               <div>
                 {/* contest prize money  */}
@@ -154,9 +182,15 @@ const AddContest = () => {
                   type="text"
                   className="input"
                   placeholder="Set Prize money"
-                  {...register('prizeMoney',{required:"Prize money is required"})}
+                  {...register("prizeMoney", {
+                    required: "Prize money is required",
+                  })}
                 />
-                {errors.prizeMoney&&<p className="text-red-500 font-bold">{errors.prizeMoney.message}</p>}
+                {errors.prizeMoney && (
+                  <p className="text-red-500 font-bold">
+                    {errors.prizeMoney.message}
+                  </p>
+                )}
               </div>
             </div>
 
@@ -168,19 +202,31 @@ const AddContest = () => {
                   type="text"
                   className="input"
                   placeholder="Set Contest Type"
-                  {...register('contestType',{required:"Contest type is required"})}
+                  {...register("contestType", {
+                    required: "Contest type is required",
+                  })}
                 />
-                {errors.contestType&&<p className="text-red-500 font-bold">{errors.contestType.message}</p>}
+                {errors.contestType && (
+                  <p className="text-red-500 font-bold">
+                    {errors.contestType.message}
+                  </p>
+                )}
               </div>
               <div>
                 {/* contest deadline  */}
                 <label className="label">Contest Type</label>
-                <input 
-                type="datetime-local" 
-                className="input" 
-                {...register('contestDeadline',{required:"Contest Deadline is required"})}
+                <input
+                  type="datetime-local"
+                  className="input"
+                  {...register("contestDeadline", {
+                    required: "Contest Deadline is required",
+                  })}
                 />
-                {errors.contestDeadline&&<p className="text-red-500 font-bold">{errors.contestDeadline.message}</p>}
+                {errors.contestDeadline && (
+                  <p className="text-red-500 font-bold">
+                    {errors.contestDeadline.message}
+                  </p>
+                )}
               </div>
             </div>
             <div className="grid grid-cols-2 gap-5">
@@ -190,9 +236,15 @@ const AddContest = () => {
                 <textarea
                   className="textarea"
                   placeholder="Add contest description"
-                  {...register('description',{required:"Contest Description is required"})}
+                  {...register("description", {
+                    required: "Contest Description is required",
+                  })}
                 ></textarea>
-                {errors.description&&<p className="text-red-500 font-bold">{errors.description.message}</p>}
+                {errors.description && (
+                  <p className="text-red-500 font-bold">
+                    {errors.description.message}
+                  </p>
+                )}
               </div>
               <div>
                 {/* contest task instruction  */}
@@ -200,13 +252,21 @@ const AddContest = () => {
                 <textarea
                   className="textarea"
                   placeholder="Add instruction"
-                  {...register('taskInstruction',{required:"Task instruction is required"})}
+                  {...register("taskInstruction", {
+                    required: "Task instruction is required",
+                  })}
                 ></textarea>
-                {errors.taskInstruction&&<p className="text-red-500 font-bold">{errors.taskInstruction.message}</p>}
+                {errors.taskInstruction && (
+                  <p className="text-red-500 font-bold">
+                    {errors.taskInstruction.message}
+                  </p>
+                )}
               </div>
             </div>
 
-            <button className="btn bg-purple-500 text-white text-lg rounded-3xl">Create Now</button>
+            <button className="btn bg-purple-500 text-white text-lg rounded-3xl">
+              Create Now
+            </button>
           </fieldset>
         </form>
       </div>
