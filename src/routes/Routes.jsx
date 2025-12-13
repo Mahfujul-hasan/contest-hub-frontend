@@ -12,6 +12,10 @@ import ContestDetails from "../Pages/ContestDetails/ContestDetails";
 import MyParticipatedContests from "../Pages/Dashboard/user/MyParticipatedContests";
 import Dashboard from "../Pages/Dashboard/Dashboard";
 import MyProfile from "../Pages/Dashboard/user/MyProfile";
+import UpdateProfile from "../Pages/Dashboard/user/UpdateProfile";
+import AddContest from "../Pages/Dashboard/contestCreator/AddContest";
+import MyContests from "../Pages/Dashboard/contestCreator/MyContests";
+import ContestUpdate from "../Pages/Dashboard/contestCreator/ContestUpdate";
 
 export const router = createBrowserRouter([
   {
@@ -63,6 +67,22 @@ export const router = createBrowserRouter([
       {
         path:'my-profile',
         Component: MyProfile
+      },
+      {
+        path:'update-profile',
+        Component:UpdateProfile
+      },
+      {
+        path:'add-contest',
+        Component:AddContest
+      },
+      {
+        path:'my-contests',
+        Component:MyContests
+      },
+      {
+        path:'my-contests/:id',
+        Component:ContestUpdate
       }
     ]
     

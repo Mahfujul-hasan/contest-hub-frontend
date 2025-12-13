@@ -70,7 +70,7 @@ const Navbar = () => {
                 <img
                   src={user.photoURL}
                   alt=""
-                  className="w-12 rounded-full border-2 border-primary"
+                  className="w-12 h-12 rounded-full border-2 border-primary"
                 />
               </Link>
             </div>

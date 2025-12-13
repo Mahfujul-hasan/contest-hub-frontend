@@ -2,13 +2,14 @@ import React from "react";
 import { Link, Outlet } from "react-router";
 import Logo from "../components/Logo/Logo";
 import { IoHome, IoSettingsOutline } from "react-icons/io5";
-import { RiMedal2Fill } from "react-icons/ri";
+import { RiListCheck2, RiMedal2Fill } from "react-icons/ri";
 import { AiOutlineMenuUnfold } from "react-icons/ai";
 import { MdSpaceDashboard } from "react-icons/md";
 import useAuth from "../hook/useAuth";
 import useAxiosSecure from "../hook/useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
 import { BsFillPersonFill } from "react-icons/bs";
+import { FiPlusCircle } from "react-icons/fi";
 
 const DashboardLayout = () => {
   const {user}=useAuth();
@@ -39,7 +40,7 @@ const DashboardLayout = () => {
           <div className="px-4 text-2xl font-bold text-transparent bg-clip-text bg-linear-65 from-indigo-500 via-purple-500 to-pink-500">ContestHub Dashboard</div>
           </div>
           <div className="navbar-end mx-5">
-            <img src={user.photoURL} alt=""  className="w-14 rounded-full border-2 border-primary p-0.5"/>
+            <img src={user.photoURL} alt=""  className="w-14 h-14 rounded-full border-2 border-primary p-0.5"/>
           </div>
         </nav>
         {/* Page content here */}
@@ -118,6 +119,34 @@ const DashboardLayout = () => {
             </li>
             </>
             }
+
+            {/* for contest creator role  */}
+
+
+            {/* List item-Add contest */}
+            <li className="mt-5 text-primary">
+              <Link to="/dashboard/add-contest"
+                className="is-drawer-close:tooltip is-drawer-close:tooltip-bottom tooltip-primary"
+                data-tip="Add contest"
+              >
+                {/* Dashboard icon */}
+                <FiPlusCircle size={18} />
+                <span className="is-drawer-close:hidden text-base font-bold">Add Contest</span>
+              </Link>
+            </li>
+
+            {/* List item-my contests */}
+            <li className="mt-5 text-primary">
+              <Link to="/dashboard/my-contests"
+                className="is-drawer-close:tooltip is-drawer-close:tooltip-bottom tooltip-primary"
+                data-tip="My contests"
+              >
+                {/* My contests icon */}
+                <RiListCheck2  size={18} />
+                <span className="is-drawer-close:hidden text-base font-bold">My Contests</span>
+              </Link>
+            </li>
+
 
             {/* List item-Settings */}
             <li className="text-primary mt-3">

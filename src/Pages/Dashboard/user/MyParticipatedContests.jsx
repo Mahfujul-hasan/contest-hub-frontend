@@ -10,7 +10,7 @@ const MyParticipatedContests = () => {
     <div className=" mx-5 space-y-5 mt-5">
       <div className="rounded-2xl p-3 grid grid-cols-1 lg:grid-cols-4 items-center  bg-white border-b-4 border-purple-500 shadow-md">
         <div className="col-span-1 hidden lg:block">
-            <img src={user.photoURL} alt="" className="rounded-2xl lg:w-20 " />
+            <img src={user.photoURL} alt="" className="rounded-2xl lg:w-25 lg:h-25 " />
         </div>
         {/* card div  */}
         <div className=" col-span-2">

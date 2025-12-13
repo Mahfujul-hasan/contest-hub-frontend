@@ -32,7 +32,7 @@ const Register = () => {
         }`;
 
         axios.post(url, formData).then((res) => {
-          const photoURL = res.data?.data?.url;
+          const photoURL = res.data?.data?.image.url;
           const updateUser = {
             displayName: data.displayName,
             photoURL: photoURL,
