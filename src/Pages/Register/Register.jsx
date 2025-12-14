@@ -27,7 +27,7 @@ const Register = () => {
       .then(() => {
         const formData = new FormData();
         formData.append("image", profileImage);
-        const url = `https://api.imgbb.com/1/upload?expiration=600&key=${
+        const url = `https://api.imgbb.com/1/upload?key=${
           import.meta.env.VITE_IMGBB_KEY
         }`;
 
@@ -38,20 +38,27 @@ const Register = () => {
             photoURL: photoURL,
           };
 
+          // create user profile in the database
           const userInfo = {
             displayName: data.displayName,
             email: data.email,
             photoURL: photoURL,
           };
 
-          axiosSecure.post("/users", userInfo).then((res) => {
-            if (res.data.insertedId) {
-              console.log("the user is added");
-            }
-          }).catch(error=>{console.log(error);});
+          axiosSecure
+            .post("/users", userInfo)
+            .then((res) => {
+              if (res.data.insertedId) {
+                console.log("the user is added");
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+
+          // update user profile to firebase
           updateUserProfile(updateUser)
             .then(() => {
-              navigate("/login");
               Swal.fire({
                 position: "center",
                 icon: "success",
@@ -64,9 +71,14 @@ const Register = () => {
               console.log(error);
             });
         });
+        navigate("/login");
       })
       .catch((error) => {
-        console.log(error);
+        Swal.fire({
+          icon: "error",
+          title:`${error.code}`,
+
+        });
       });
 
     console.log(user);

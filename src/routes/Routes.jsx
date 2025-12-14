@@ -16,6 +16,8 @@ import UpdateProfile from "../Pages/Dashboard/user/UpdateProfile";
 import AddContest from "../Pages/Dashboard/contestCreator/AddContest";
 import MyContests from "../Pages/Dashboard/contestCreator/MyContests";
 import ContestUpdate from "../Pages/Dashboard/contestCreator/ContestUpdate";
+import PaymentSuccess from "../Pages/Payment/PaymentSuccess";
+import PaymentCancelled from "../Pages/Payment/PaymentCancelled";
 
 export const router = createBrowserRouter([
   {
@@ -32,8 +34,16 @@ export const router = createBrowserRouter([
           Component:AllContests
         },
         {
-          path:'contest-details',
+          path:'contest-details/:id',
           element:<PrivateRouter><ContestDetails></ContestDetails></PrivateRouter>
+        },
+        {
+          path:'payment-success',
+          element:<PrivateRouter><PaymentSuccess></PaymentSuccess></PrivateRouter>
+        },
+        {
+          path:'payment-cancelled',
+          element:<PrivateRouter><PaymentCancelled></PaymentCancelled></PrivateRouter>
         }
 
     ]

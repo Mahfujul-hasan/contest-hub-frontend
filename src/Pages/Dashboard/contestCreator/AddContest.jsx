@@ -26,7 +26,7 @@ const AddContest = () => {
     const contestImg = data.contestImage[0];
     const formData = new FormData();
     formData.append("image", contestImg);
-    const url = `https://api.imgbb.com/1/upload?expiration=600&key=${
+    const url = `https://api.imgbb.com/1/upload?key=${
       import.meta.env.VITE_IMGBB_KEY
     }`;
     const res = await axios.post(url, formData);
