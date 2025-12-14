@@ -14,9 +14,11 @@ const PaymentSuccess = () => {
         })
     },[sessionId,axiosSecure])
     console.log(sessionId);
+    //payment section
     return (
         <div>
             payment has been successfully done.
+            
         </div>
     );
 };
