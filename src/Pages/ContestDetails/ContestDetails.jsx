@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router";
 import useAxiosSecure from "../../hook/useAxiosSecure";
 import { MdOutlinePeopleAlt } from "react-icons/md";
@@ -15,10 +15,13 @@ import Swal from "sweetalert2";
 import Spinner from "../../components/Spinner/Spinner";
 
 const ContestDetails = () => {
-  const { user,loading } = useAuth();
+  const { user, loading } = useAuth();
   const { id } = useParams();
   const axiosSecure = useAxiosSecure();
   const submitModalRef = useRef();
+  const [submissionSuccess, setSubmissionSuccess] = useState(false);
+
+
   const {
     register,
     handleSubmit,
@@ -27,6 +30,7 @@ const ContestDetails = () => {
   } = useForm();
   const { data: contest, isLoading: contestLoading } = useQuery({
     queryKey: ["contest", id],
+    staleTime: 1000 * 60 * 5,
     queryFn: async () => {
       const res = await axiosSecure.get(`/contests/${id}`);
       return res.data[0];
@@ -35,35 +39,47 @@ const ContestDetails = () => {
 
   const { data: participant, isLoading: participantLoading } = useQuery({
     queryKey: ["participant", user.email],
+    enabled: !!user?.email,
+    staleTime: 1000 * 60 * 5,
     queryFn: async () => {
       const res = await axiosSecure.get(`/users/${user.email}`);
       return res.data;
     },
   });
 
-  const { data: participation=null, isLoading: participationLoading } = useQuery({
-    queryKey: ["participation", contest?._id, participant?._id],
-    enabled: !!contest?._id && !!participant?._id,
+  const { data: participation = null, isLoading: participationLoading } =
+    useQuery({
+      queryKey: ["participation", contest?._id, participant?._id],
+      enabled: !!contest?._id && !!participant?._id,
+      queryFn: async () => {
+        const res = await axiosSecure.get(
+          `/participations?contestId=${contest._id}&userId=${participant._id}`
+        );
+        return res.data;
+      },
+    });
+
+  const { data: submission, isLoading: submissionLoading, refetch: refetchSubmission, } = useQuery({
+    queryKey: ["submission", participant?._id, id],
+    enabled: !!participant?._id && !!id,
     queryFn: async () => {
       const res = await axiosSecure.get(
-        `/participations?contestId=${contest._id}&userId=${participant._id}`
+        `/submissions/user-submission-status?userId=${participant._id}&contestId=${id}`
       );
       return res.data;
     },
   });
 
- 
-  const {data:submission, isLoading:submissionLoading}=useQuery({
-    queryKey:["submission",participant?._id,id],
-    queryFn:async()=>{
-      const res = await axiosSecure.get(`/submissions/user-submission-status?userId=${participant._id}&contestId=${id}`)
-      return res.data
+  useEffect(() => {
+    if (submissionSuccess) {
+      submitModalRef.current?.close();
     }
-  })
-  
-  if (loading||contestLoading || participantLoading || participationLoading||submissionLoading) {
-    return <Spinner/>;
+  }, [submissionSuccess]);
+
+  if (loading || contestLoading) {
+    return <Spinner />;
   }
+  
 
   const handlePayment = async () => {
     const paymentInfo = {
@@ -113,7 +129,9 @@ const ContestDetails = () => {
         });
       }
     });
-    reset();
+     reset(); 
+    setSubmissionSuccess(true);
+    refetchSubmission();
   };
   return (
     <div className="min-h-screen max-w-7xl mx-auto ">
@@ -176,32 +194,44 @@ const ContestDetails = () => {
         </div>
       </div>
 
-      {
-        contest.winnerId && <div className="bg-purple-100 rounded-3xl p-10 mx-5">
-          <h3 className="text-primary text-4xl font-bold text-center">Winner declared of the contest</h3>
+      {contest.winnerId && (
+        <div className="bg-purple-100 rounded-3xl p-10 mx-5">
+          <h3 className="text-primary text-4xl font-bold text-center">
+            Winner declared of the contest
+          </h3>
           <div className="flex flex-col items-center">
-            <img src={contest.winnerPhoto} alt="" className="rounded-full border-2 border-purple-700 w-28 h-28" />
-            <h3 className="text-2xl font-bold text-purple-700">{contest.winnerName}</h3>
+            <img
+              src={contest.winnerPhoto}
+              alt=""
+              className="rounded-full border-2 border-purple-700 w-28 h-28"
+            />
+            <h3 className="text-2xl font-bold text-purple-700">
+              {contest.winnerName}
+            </h3>
           </div>
         </div>
-      }
+      )}
 
       {new Date() < new Date(contest.deadline) && (
         <>
           <div className="mx-5 mt-5">
-            <button
-              onClick={handlePayment}
-              disabled={participation?.paymentStatus === "paid"}
-              className={`btn ${
-                participation?.paymentStatus === "paid"
-                  ? "bg-gray-500"
-                  : "bg-blue-500 cursor-pointer"
-              }  w-full text-white text-2xl font-bold py-7 rounded-2xl`}
-            >
-              {participation?.paymentStatus === "paid"
-                ? "Registered"
-                : "Register & Pay"}
-            </button>
+            {participantLoading || participationLoading ? (
+              <Spinner />
+            ) : (
+              <button
+                onClick={handlePayment}
+                disabled={participation?.paymentStatus === "paid"}
+                className={`btn ${
+                  participation?.paymentStatus === "paid"
+                    ? "bg-gray-500"
+                    : "bg-blue-500 cursor-pointer"
+                }  w-full text-white text-2xl font-bold py-7 rounded-2xl`}
+              >
+                {participation?.paymentStatus === "paid"
+                  ? "Registered"
+                  : "Register & Pay"}
+              </button>
+            )}
           </div>
           <div className="mx-5 p-5 bg-blue-50 rounded-3xl mt-5">
             <ul className="list-disc list-inside">
@@ -218,13 +248,19 @@ const ContestDetails = () => {
           </div>
           {participation?.paymentStatus === "paid" && (
             <div className="mx-5 mt-5">
-              <button
-                onClick={handleSubmitModal}
-                disabled={submission}
-                className={`btn ${submission?"bg-gray-500":"bg-blue-500"} w-full text-white text-2xl font-bold py-7 rounded-2xl`}
-              >
-                submit task
-              </button>
+              {submissionLoading ? (
+                <Spinner />
+              ) : (
+                <button
+                  onClick={handleSubmitModal}
+                  disabled={submission}
+                  className={`btn ${
+                    submission ? "bg-gray-500" : "bg-blue-500"
+                  } w-full text-white text-2xl font-bold py-7 rounded-2xl`}
+                >
+                  submit task
+                </button>
+              )}
               <dialog
                 ref={submitModalRef}
                 className="modal modal-bottom sm:modal-middle"
@@ -251,7 +287,10 @@ const ContestDetails = () => {
                             {errors.submissionLink.message}
                           </p>
                         )}
-                        <button className="btn bg-[#225ce5] text-white text-lg font-semibold" disabled={submission}>
+                        <button
+                          className="btn bg-[#225ce5] text-white text-lg font-semibold"
+                          disabled={submission}
+                        >
                           Submit
                         </button>
                       </fieldset>

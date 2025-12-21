@@ -13,18 +13,15 @@ import { useQuery } from "@tanstack/react-query";
 import Spinner from "../../../components/Spinner/Spinner";
 
 const Navbar = () => {
-  const { user,loading, logOut } = useAuth();
-  const axiosSecure=useAxiosSecure()
-  const {data:loginUser, isLoading:loginUserLoading}=useQuery({
-    queryKey:["users",user?.email],
-    queryFn:async()=>{
-        const res = await axiosSecure.get(`/users/${user.email}`);
-        return res.data
-    }
-  })
-  if(loginUserLoading || loading){
-    return <Spinner/>
-  }
+  const { user, logOut } = useAuth();
+  const axiosSecure = useAxiosSecure();
+  const { data: loginUser} = useQuery({
+    queryKey: ["users", user?.email],
+    queryFn: async () => {
+      const res = await axiosSecure.get(`/users/${user.email}`);
+      return res.data;
+    },
+  });
 
   const links = (
     <>
@@ -88,9 +85,8 @@ const Navbar = () => {
               className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
             >
               {links}
-              <ThemeControler/>
+              <ThemeControler />
             </ul>
-            
           </div>
           <div>
             <Logo></Logo>
@@ -98,10 +94,11 @@ const Navbar = () => {
         </div>
         <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal px-1">{links}</ul>
-          <ThemeControler/>
+          <ThemeControler />
         </div>
         <div className="navbar-end space-x-3">
-          {user ? (
+          
+          {user && loginUser ? (
             <>
               <div className="dropdown dropdown-end ">
                 <div tabIndex={0}>

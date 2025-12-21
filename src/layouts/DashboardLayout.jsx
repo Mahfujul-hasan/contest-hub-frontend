@@ -14,7 +14,7 @@ import { FaTasks, FaTrophy, FaUsersCog } from "react-icons/fa";
 import Spinner from "../components/Spinner/Spinner";
 
 const DashboardLayout = () => {
-  const { user,loading } = useAuth();
+  const { user} = useAuth();
 
   const axiosSecure = useAxiosSecure();
   const { data: userRole } = useQuery({
@@ -24,17 +24,14 @@ const DashboardLayout = () => {
       return res.data.role;
     },
   });
-  const {data:loginUser, isLoading:loginUserLoading}=useQuery({
+  const {data:loginUser}=useQuery({
     queryKey:["users",user?.email],
     queryFn:async()=>{
         const res = await axiosSecure.get(`/users/${user.email}`);
         return res.data
     }
   })
-  if(loginUserLoading || loading){
-    return <Spinner/>
-  }
-
+  
   return (
     <div className="drawer lg:drawer-open max-w-7xl mx-auto">
       <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
@@ -54,6 +51,8 @@ const DashboardLayout = () => {
               ContestHub Dashboard
             </div>
           </div>
+          {
+          (user && loginUser) &&
           <div className="navbar-end mx-5">
             <img
               src={loginUser.photoURL}
@@ -61,6 +60,8 @@ const DashboardLayout = () => {
               className="w-14 h-14 rounded-full border-2 border-primary p-0.5"
             />
           </div>
+          }
+          
         </nav>
         {/* Page content here */}
         <Outlet />
