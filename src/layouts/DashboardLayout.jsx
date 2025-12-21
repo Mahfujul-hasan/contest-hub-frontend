@@ -14,7 +14,7 @@ import { FaTasks, FaTrophy, FaUsersCog } from "react-icons/fa";
 import Spinner from "../components/Spinner/Spinner";
 
 const DashboardLayout = () => {
-  const { user } = useAuth();
+  const { user,loading } = useAuth();
 
   const axiosSecure = useAxiosSecure();
   const { data: userRole } = useQuery({
@@ -31,7 +31,7 @@ const DashboardLayout = () => {
         return res.data
     }
   })
-  if(loginUserLoading){
+  if(loginUserLoading || loading){
     return <Spinner/>
   }
 

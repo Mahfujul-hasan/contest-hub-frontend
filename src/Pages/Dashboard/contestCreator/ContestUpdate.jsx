@@ -67,8 +67,8 @@ const ContestUpdate = () => {
   };
 
   return (
-    <div className="grid grid-cols-5 items-center  my-10 mx-3 shadow-md border border-gray-200 rounded-3xl">
-      <div className="col-span-2 h-full">
+    <div className="grid grid-cols-1 md:grid-cols-5 lg:grid-cols-5 items-center  my-10 mx-3 shadow-md border border-gray-200 rounded-3xl">
+      <div className="hidden md:flex lg:flex col-span-2 h-full">
         <img src={addContestImg} alt="" className="rounded-l-3xl h-full" />
       </div>
       <div className="col-span-3 rounded-r-3xl p-5">

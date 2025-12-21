@@ -15,7 +15,7 @@ import Swal from "sweetalert2";
 import Spinner from "../../components/Spinner/Spinner";
 
 const ContestDetails = () => {
-  const { user } = useAuth();
+  const { user,loading } = useAuth();
   const { id } = useParams();
   const axiosSecure = useAxiosSecure();
   const submitModalRef = useRef();
@@ -61,7 +61,7 @@ const ContestDetails = () => {
     }
   })
   
-  if (contestLoading || participantLoading || participationLoading||submissionLoading) {
+  if (loading||contestLoading || participantLoading || participationLoading||submissionLoading) {
     return <Spinner/>;
   }
 

@@ -13,7 +13,7 @@ import { useQuery } from "@tanstack/react-query";
 import Spinner from "../../../components/Spinner/Spinner";
 
 const Navbar = () => {
-  const { user, logOut } = useAuth();
+  const { user,loading, logOut } = useAuth();
   const axiosSecure=useAxiosSecure()
   const {data:loginUser, isLoading:loginUserLoading}=useQuery({
     queryKey:["users",user?.email],
@@ -22,7 +22,7 @@ const Navbar = () => {
         return res.data
     }
   })
-  if(loginUserLoading){
+  if(loginUserLoading || loading){
     return <Spinner/>
   }
 
