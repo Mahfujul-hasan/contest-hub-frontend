@@ -66,7 +66,7 @@ const AddContest = () => {
         reset();
       }
     });
-    console.log(contestInfo);
+
   };
   return (
     <div className="grid grid-cols-5 items-center  my-10 mx-3 shadow-md border border-gray-200 rounded-3xl">

@@ -33,7 +33,7 @@ const UpdateProfile = () => {
         const url = `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_IMGBB_KEY}`
         const res= await axios.post(url,formData)
         const photoURL=res.data.data.image.url;
-        console.log(photoURL);
+        
     const updatedInfo = {
       bio:data.bio,
       photoURL:photoURL,

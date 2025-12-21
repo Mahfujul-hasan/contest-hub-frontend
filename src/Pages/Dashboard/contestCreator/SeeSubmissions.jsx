@@ -19,10 +19,9 @@ const SeeSubmissions = () => {
   if(submissionLoading){
     return <Spinner />
   }
-  console.log(submissions);
 
   const winnerDeclared=submissions.filter(submission=>(submission.isWinner==="winner"))
-  console.log(winnerDeclared);
+
 
   const handleWinner = async(submission) => {
     Swal.fire({

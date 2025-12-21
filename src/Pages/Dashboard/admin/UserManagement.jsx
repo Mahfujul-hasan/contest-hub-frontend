@@ -17,7 +17,6 @@ const UserManagement = () => {
     if(usersLoading){
         return <Spinner/>
     }
-    console.log(users);
 
     const handleUserRole = (user, role) => {
     const userRoleInfo = { role: role };

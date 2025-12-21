@@ -21,7 +21,7 @@ const MyProfile = () => {
     return <Spinner/>
   }
   
-  // console.log(loginUser);
+
   return (
     <div className="bg-white rounded-2xl shadow-md min-h-screen mt-5 border border-gray-200">
       <div className="p-10 ">

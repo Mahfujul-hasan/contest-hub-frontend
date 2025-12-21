@@ -13,7 +13,6 @@ const PaymentSuccess = () => {
     useEffect(()=>{
         axiosSecure.patch(`/payment-success?session_id=${sessionId}`)
         .then(res=>{
-            console.log(res.data);
             if(res.data.success ){
                 setTimeout(()=>{
                     navigate(`/contest-details/${res.data.data.contestId

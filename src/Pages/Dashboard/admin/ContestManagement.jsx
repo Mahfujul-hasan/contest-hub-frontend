@@ -21,7 +21,6 @@ const ContestManagement = () => {
   if (contestLoading) {
     return <Spinner/>
   }
-  console.log(contests);
   const handleContestManagement = (contest, status) => {
     const contestStatusInfo = {
       status: status,

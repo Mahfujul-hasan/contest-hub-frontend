@@ -47,7 +47,7 @@ const AuthProvider = ({children}) => {
 
             if(currentUser?.email){
                try {
-                 const res=await axios.post("http://localhost:3000/jwt",{
+                 const res=await axios.post("https://contest-hub-backend-pi.vercel.app/jwt",{
                     email:currentUser.email,
                 });
                 

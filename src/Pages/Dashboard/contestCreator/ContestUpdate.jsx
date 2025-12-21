@@ -40,7 +40,7 @@ const ContestUpdate = () => {
     }`;
     const res = await axios.post(url, formData);
     const contestImage = res.data.data.image.url;
-    console.log(contestImage);
+
     const updatedInfo = {
       contestName: data.contestName,
       contestImage: contestImage,
@@ -62,10 +62,10 @@ const ContestUpdate = () => {
           timer: 1500,
         });
       }
-      console.log(res.data);
+
     });
   };
-  //   console.log(contest);
+
   return (
     <div className="grid grid-cols-5 items-center  my-10 mx-3 shadow-md border border-gray-200 rounded-3xl">
       <div className="col-span-2 h-full">

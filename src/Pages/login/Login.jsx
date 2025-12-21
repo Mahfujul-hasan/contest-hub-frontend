@@ -15,8 +15,8 @@ const Login = () => {
     formState: { errors },
   } = useForm();
   const handleLogin = (data) => {
-    loginUser(data.email, data.password).then((res) => {
-      console.log(res.user);
+    loginUser(data.email, data.password).then(() => {
+      
       navigate(location.state || "/");
       Swal.fire({
         position: "center",
@@ -30,7 +30,7 @@ const Login = () => {
 
   return (
     <div className="min-h-screen max-w-[1440px] mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 items-center">
-      <div className="bg-secondary h-full flex items-center">
+      <div className="bg-blue-100 h-full flex items-center">
         <img src={webLogo} alt="" />
       </div>
       <div className="p-5  w-[90%] mx-auto">

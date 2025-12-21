@@ -12,6 +12,7 @@ import DeadlineCountDown from "../../components/DeadlineCountDown/DeadlineCountD
 import trophyImg from "../../assets/trophy.png";
 import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
+import Spinner from "../../components/Spinner/Spinner";
 
 const ContestDetails = () => {
   const { user } = useAuth();
@@ -52,9 +53,8 @@ const ContestDetails = () => {
   });
 
   if (contestLoading || participantLoading || participationLoading) {
-    return <p>loaidng...</p>;
+    return <Spinner/>;
   }
-  console.log(participation);
 
   const handlePayment = async () => {
     const paymentInfo = {
@@ -72,9 +72,7 @@ const ContestDetails = () => {
     };
 
     const res = await axiosSecure.post("/create-checkout-session", paymentInfo);
-    // console.log(res.data.url);
     window.location.href = res.data.url;
-    console.log(paymentInfo);
   };
 
   const handleSubmitModal = () => {
@@ -107,7 +105,6 @@ const ContestDetails = () => {
       }
     });
     reset();
-    console.log(submissionInfo);
   };
   return (
     <div className="min-h-screen max-w-7xl mx-auto ">

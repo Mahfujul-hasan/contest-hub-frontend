@@ -17,7 +17,6 @@ const PopularContests = () => {
     if(isLoading){
         return <Spinner/>
     }
-    console.log(contests);
     return (
         <div>
             <h3 className='text-4xl font-bold text-primary mt-10 text-center'>Popular contests</h3>

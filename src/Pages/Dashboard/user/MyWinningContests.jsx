@@ -29,7 +29,7 @@ const MyWinningContests = () => {
   if (currentUserLoading || winningContestsLoading) {
     return <Spinner />;
   }
-  console.log(winningContests);
+
   return (
     <div>
       <h3 className="text-3xl font-bold text-purple-500 text-center pt-5">

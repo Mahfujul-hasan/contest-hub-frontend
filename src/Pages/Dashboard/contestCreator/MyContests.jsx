@@ -41,7 +41,7 @@ const MyContests = () => {
       }
     });
   };
-  console.log(contests);
+
   return (
     <div>
       <h3 className="text-3xl font-bold text-purple-500 text-center pt-5">

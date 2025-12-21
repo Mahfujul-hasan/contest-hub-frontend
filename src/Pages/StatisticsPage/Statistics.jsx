@@ -29,7 +29,7 @@ const Statistics = () => {
   const totalPrizePool = contests.reduce((sum, c) => sum + parseInt(c.prizeMoney), 0);
   const avgParticipation = (totalParticipants / totalContests).toFixed(1);
 
-  console.log(totalContests, totalParticipants, totalPrizePool, avgParticipation);
+
 
   const prizeRanges = [
     { range: "৳ 0-1K", contests: contests.filter((c) => c.prizeMoney < 1000) },

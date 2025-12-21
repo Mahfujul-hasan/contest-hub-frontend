@@ -28,7 +28,6 @@ const Dashboard = () => {
     return <spinner />;
   }
 
-  console.log(userRole);
   return (
     <div>
       {userRole === "user" && (
