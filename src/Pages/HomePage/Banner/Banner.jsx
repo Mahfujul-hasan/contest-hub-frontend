@@ -58,6 +58,7 @@ const Banner = () => {
           />
         </label>
       </div>
+      // search item 
       <div className="flex justify-center">
         {searchedContests.length > 0 &&
           <div className="bg-white px-5 mt-0 mx-5 border-t border-gray-200 max-h-52 overflow-y-auto w-3xl z-10 rounded-3xl rounded-t-none">
@@ -80,5 +81,6 @@ const Banner = () => {
     </div>
   );
 };
+
 
 export default Banner;
