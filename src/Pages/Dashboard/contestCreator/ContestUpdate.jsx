@@ -2,15 +2,23 @@ import { useQuery } from "@tanstack/react-query";
 import addContestImg from "../../../assets/create_contest.png";
 import { useNavigate, useParams } from "react-router";
 import useAxiosSecure from "../../../hook/useAxiosSecure";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import axios from "axios";
 import Swal from "sweetalert2";
+import Spinner from "../../../components/Spinner/Spinner";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const ContestUpdate = () => {
   const { id } = useParams();
-  const navigate=useNavigate();
+  const navigate = useNavigate();
   const axiosSecure = useAxiosSecure();
-  const{register, handleSubmit,formState:{errors}}=useForm()
+  const {
+    register,
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
   const { data: contest, isLoading } = useQuery({
     queryKey: ["contest", id],
     queryFn: async () => {
@@ -19,47 +27,45 @@ const ContestUpdate = () => {
     },
   });
 
-  if(isLoading){
-    return <p>loading...</p>
+  if (isLoading) {
+    return <Spinner />;
   }
 
-
-  const handleUpdateContest=async(data)=>{
-    const contestImg=data.contestImage[0]
-        const formData = new FormData();
-        formData.append("image",contestImg);
-        const url = `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_IMGBB_KEY}`
-        const res= await axios.post(url,formData)
-        const contestImage=res.data.data.image.url;
-        console.log(contestImage);
-        const updatedInfo= {
-            contestName:data.contestName,
-            contestImage:contestImage,
-            contestDescription:data.description,
-            entryPrice:data.entryPrice,
-            prizeMoney:data.prizeMoney,
-            contestType:data.contestType,
-            taskInstruction:data.taskInstruction,
-            deadline:data.contestDeadline
-
-        }
-        axiosSecure.patch(`/contests/${id}`,updatedInfo)
-        .then(res=>{
-            if(res.data.modifiedCount){
-                navigate('/dashboard/my-contests')
-                Swal.fire({
-                          position: "center",
-                          icon: "success",
-                          title: "Your contest has been updated!",
-                          showConfirmButton: false,
-                          timer: 1500,
-                        });
-            }
-            console.log(res.data);
-        })
-
-  }
-//   console.log(contest);
+  const handleUpdateContest = async (data) => {
+    const contestImg = data.contestImage[0];
+    const formData = new FormData();
+    formData.append("image", contestImg);
+    const url = `https://api.imgbb.com/1/upload?key=${
+      import.meta.env.VITE_IMGBB_KEY
+    }`;
+    const res = await axios.post(url, formData);
+    const contestImage = res.data.data.image.url;
+    console.log(contestImage);
+    const updatedInfo = {
+      contestName: data.contestName,
+      contestImage: contestImage,
+      contestDescription: data.description,
+      entryPrice: data.entryPrice,
+      prizeMoney: data.prizeMoney,
+      contestType: data.contestType,
+      taskInstruction: data.taskInstruction,
+      deadline: data.contestDeadline,
+    };
+    axiosSecure.patch(`/contests/${id}`, updatedInfo).then((res) => {
+      if (res.data.modifiedCount) {
+        navigate("/dashboard/my-contests");
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Your contest has been updated!",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      }
+      console.log(res.data);
+    });
+  };
+  //   console.log(contest);
   return (
     <div className="grid grid-cols-5 items-center  my-10 mx-3 shadow-md border border-gray-200 rounded-3xl">
       <div className="col-span-2 h-full">
@@ -209,16 +215,27 @@ const ContestUpdate = () => {
                   </p>
                 )}
               </div>
-              <div>
+              <div className="flex flex-col">
                 {/* contest deadline  */}
-                <label className="label">Contest Type</label>
-                <input
-                  type="datetime-local"
-                  className="input"
-                  defaultValue={contest.deadline}
-                  {...register("contestDeadline", {
-                    required: "Contest Deadline is required",
-                  })}
+                <label className="label">Contest Deadline</label>
+                <Controller
+                  name="contestDeadline"
+                  control={control}
+                  defaultValue={new Date(contest.deadline)}
+                  rules={{ required: "Contest Deadline is required" }}
+                  render={({ field }) => (
+                    <DatePicker
+                      selected={field.value}
+                      onChange={(date) => field.onChange(date)}
+                      showTimeSelect
+                      timeFormat="HH:mm"
+                      timeIntervals={15}
+                      dateFormat="MMMM d, yyyy h:mm aa"
+                      className="input"
+                      placeholderText="Select date and time"
+                      minDate={new Date()}
+                    />
+                  )}
                 />
                 {errors.contestDeadline && (
                   <p className="text-red-500 font-bold">

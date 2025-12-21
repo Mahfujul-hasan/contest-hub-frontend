@@ -18,6 +18,15 @@ import MyContests from "../Pages/Dashboard/contestCreator/MyContests";
 import ContestUpdate from "../Pages/Dashboard/contestCreator/ContestUpdate";
 import PaymentSuccess from "../Pages/Payment/PaymentSuccess";
 import PaymentCancelled from "../Pages/Payment/PaymentCancelled";
+import SeeSubmissions from "../Pages/Dashboard/contestCreator/seeSubmissions";
+import UserManagement from "../Pages/Dashboard/admin/UserManagement";
+import ContestManagement from "../Pages/Dashboard/admin/ContestManagement";
+import MyWinningContests from "../Pages/Dashboard/user/MyWinningContests";
+import CreatorRouter from "./CreatorRouter";
+import AdminRouter from "./AdminRouter";
+import Leaderboard from "../Pages/Dashboard/user/Leaderboard";
+import Statistics from "../Pages/StatisticsPage/Statistics";
+import Resources from "../Pages/Resources/Resources";
 
 export const router = createBrowserRouter([
   {
@@ -36,6 +45,14 @@ export const router = createBrowserRouter([
         {
           path:'contest-details/:id',
           element:<PrivateRouter><ContestDetails></ContestDetails></PrivateRouter>
+        },
+        {
+          path:'statistics',
+          Component:Statistics
+        },
+        {
+          path:'resources',
+          Component:Resources
         },
         {
           path:'payment-success',
@@ -75,6 +92,10 @@ export const router = createBrowserRouter([
         Component:MyParticipatedContests
       },
       {
+        path:'my-winnings-contests',
+        Component:MyWinningContests
+      },
+      {
         path:'my-profile',
         Component: MyProfile
       },
@@ -83,16 +104,32 @@ export const router = createBrowserRouter([
         Component:UpdateProfile
       },
       {
+        path:'leaderboard',
+        Component:Leaderboard
+      },
+      {
         path:'add-contest',
-        Component:AddContest
+        element:<CreatorRouter><AddContest /></CreatorRouter>
       },
       {
         path:'my-contests',
-        Component:MyContests
+        element:<CreatorRouter><MyContests /></CreatorRouter>
       },
       {
         path:'my-contests/:id',
-        Component:ContestUpdate
+        element:<CreatorRouter><ContestUpdate /></CreatorRouter>
+      },
+      {
+        path:'my-contests/submissions/:id',
+        element:<CreatorRouter><SeeSubmissions /></CreatorRouter>
+      },
+      {
+        path:'user-management',
+        element:<AdminRouter><UserManagement /></AdminRouter>
+      },
+      {
+        path:'contest-management',
+        element:<AdminRouter><ContestManagement /></AdminRouter>
       }
     ]
     

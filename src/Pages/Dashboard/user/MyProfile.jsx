@@ -4,6 +4,7 @@ import { FiEdit } from "react-icons/fi";
 import PieCartUser from "../../../components/PieChart/PieChartUser";
 import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../../hook/useAxiosSecure";
+import Spinner from "../../../components/Spinner/Spinner";
 
 const MyProfile = () => {
   const {user} = useAuth();
@@ -17,7 +18,7 @@ const MyProfile = () => {
     }
   })
   if(loginUserLoading){
-    return <p>loading...</p>
+    return <Spinner/>
   }
   
   // console.log(loginUser);
@@ -26,20 +27,20 @@ const MyProfile = () => {
       <div className="p-10 ">
         <div className="flex justify-between ">
         <h3 className="text-2xl font-semibold text-primary">Profile Information</h3>
-        <Link to="/dashboard/update-profile"><button className="btn bg-purple-500 text-white text-lg font-bold rounded-xl flex items-center"><FiEdit />Edit</button></Link>
+        <Link to="/dashboard/update-profile"><button  className="btn bg-purple-500 text-white text-lg font-bold rounded-xl flex items-center"><FiEdit />Edit</button></Link>
       </div>
       <div className="mt-10">
-        <img src={user.photoURL} alt="" className="rounded-full w-80 h-80 mx-auto outline-4 outline-purple-500" />
+        <img src={loginUser.photoURL} alt="" className="rounded-full w-80 h-80 mx-auto outline-4 outline-purple-500" />
         <form className="outline-4 outline-purple-300 rounded-2xl p-5 mt-10">
              <fieldset className="fieldset">
 
                 {/* name  */}
           <label className="label text-base font-bold">Your Name</label>
-          <input type="text" className="input w-full bg-base-200" placeholder="Your name" defaultValue={user.displayName} readOnly />
+          <input type="text" className="input w-full bg-base-200" placeholder="Your name" defaultValue={loginUser.displayName} readOnly />
 
           {/* email */}
           <label className="label text-base font-bold">Your Email</label>
-          <input type="email" className="input w-full bg-base-200" placeholder="Email" defaultValue={user.email} readOnly />
+          <input type="email" className="input w-full bg-base-200" placeholder="Email" defaultValue={loginUser.email} readOnly />
 
           {/* bio  */}
           <label className="label text-base font-bold">Your Bio</label>
@@ -50,14 +51,14 @@ const MyProfile = () => {
       </div>
       <div className="bg-purple-100 rounded-2xl mt-10">
         <h3 className="text-center text-xl font-semibold text-gray-700 pt-5">Win Percentage</h3>
-        <PieCartUser/>
+        <PieCartUser loginUser={loginUser}/>
         <div className="grid grid-cols-2 gap-5 p-5">
             <div className="bg-white rounded-2xl text-center py-10">
-                <h3 className="text-2xl font-extrabold text-purple-700">12</h3>
+                <h3 className="text-2xl font-extrabold text-purple-700">{loginUser.totalParticipations}</h3>
                 <p>Total Participated</p>
             </div>
             <div className="bg-white rounded-2xl text-center py-8">
-                <h3 className="text-2xl font-extrabold text-green-700">3</h3>
+                <h3 className="text-2xl font-extrabold text-green-700">{loginUser.totalWins}</h3>
                 <p>Total Won</p>
             </div>
         </div>

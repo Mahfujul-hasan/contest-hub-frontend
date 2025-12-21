@@ -1,10 +1,12 @@
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import addContestImg from "../../../assets/create_contest.png";
 import useAuth from "../../../hook/useAuth";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../../hook/useAxiosSecure";
 import Swal from "sweetalert2";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 const AddContest = () => {
   const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
@@ -12,6 +14,7 @@ const AddContest = () => {
     register,
     handleSubmit,
     reset,
+    control,
     formState: { errors },
   } = useForm();
   const { data: currentUser } = useQuery({
@@ -53,7 +56,6 @@ const AddContest = () => {
 
     axiosSecure.post("/contests", contestInfo).then((res) => {
       if (res.data.insertedId) {
-        
         Swal.fire({
           position: "center",
           icon: "success",
@@ -62,7 +64,6 @@ const AddContest = () => {
           timer: 1500,
         });
         reset();
-        
       }
     });
     console.log(contestInfo);
@@ -212,15 +213,26 @@ const AddContest = () => {
                   </p>
                 )}
               </div>
-              <div>
+              <div className="flex flex-col">
                 {/* contest deadline  */}
-                <label className="label">Contest Type</label>
-                <input
-                  type="datetime-local"
-                  className="input"
-                  {...register("contestDeadline", {
-                    required: "Contest Deadline is required",
-                  })}
+                <label className="label">Contest Deadline</label>
+                <Controller
+                  name="contestDeadline"
+                  control={control}
+                  rules={{ required: "Contest Deadline is required" }}
+                  render={({ field }) => (
+                    <DatePicker
+                      selected={field.value}
+                      onChange={(date) => field.onChange(date)}
+                      showTimeSelect
+                      timeFormat="HH:mm"
+                      timeIntervals={15}
+                      dateFormat="MMMM d, yyyy h:mm aa"
+                      className="input"
+                      placeholderText="Select date and time"
+                      minDate={new Date()}
+                    />
+                  )}
                 />
                 {errors.contestDeadline && (
                   <p className="text-red-500 font-bold">

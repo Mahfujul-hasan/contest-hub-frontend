@@ -4,6 +4,8 @@ import { useForm } from "react-hook-form";
 import useAxiosSecure from "../../../hook/useAxiosSecure";
 import { useNavigate } from "react-router";
 import Swal from "sweetalert2";
+import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
 
 const UpdateProfile = () => {
   const { user } = useAuth();
@@ -15,8 +17,29 @@ const UpdateProfile = () => {
     formState: { errors },
   } = useForm();
 
-  const handleUpdateUser = (data) => {
-    const updatedInfo = {bio:data.bio};
+      const {data:loginUser, isLoading:loginUserLoading}=useQuery({
+    queryKey:["users",user?.email],
+    queryFn:async()=>{
+        const res = await axiosSecure.get(`/users/${user.email}`);
+        return res.data
+    }
+  })
+
+  const handleUpdateUser = async(data) => {
+  
+    const userImg=data.photoURL[0]
+        const formData = new FormData();
+        formData.append("image",userImg);
+        const url = `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_IMGBB_KEY}`
+        const res= await axios.post(url,formData)
+        const photoURL=res.data.data.image.url;
+        console.log(photoURL);
+    const updatedInfo = {
+      bio:data.bio,
+      photoURL:photoURL,
+      displayName:data.displayName
+    };
+   
     axiosSecure.patch(`/users/${user.email}`, updatedInfo).then((res) => {
         
       if (res.data.modifiedCount) {
@@ -30,29 +53,40 @@ const UpdateProfile = () => {
         });
       }
     });
+    
   };
+
+  if(loginUserLoading){
+    return <p>loading</p>
+  }
   return (
     <div>
       <h3 className=" text-center text-2xl font-bold mt-10">Update Profile</h3>
       <div className="mt-10">
-        <img
-          src={user.photoURL}
-          alt=""
-          className="rounded-full mx-auto outline-4 outline-purple-500 w-96 h-96"
-        />
         <form
           onSubmit={handleSubmit(handleUpdateUser)}
           className="outline-4 outline-purple-300 rounded-2xl p-5 mt-10"
         >
           <fieldset className="fieldset">
+            <label className="label text-base font-bold">Update your Photo</label>
+            <input
+              type="file"
+              className="file-input file-input-ghost"
+              {...register("photoURL", { required: "Photo is required" })}
+            />
+
             {/* name  */}
             <label className="label text-base font-bold">Your Name</label>
             <input
               type="text"
               className="input w-full bg-base-200"
               placeholder="Your name"
-              defaultValue={user.displayName}
+              defaultValue={loginUser.displayName}
+              {...register("displayName", { required: "display name is required" })}
             />
+            {errors.displayName && (
+              <p className="text-red-500 font-bold">{errors.displayName.message}</p>
+            )}
 
             {/* email */}
             <label className="label text-base font-bold">Your Email</label>
@@ -61,6 +95,7 @@ const UpdateProfile = () => {
               className="input w-full bg-base-200"
               placeholder="Email"
               defaultValue={user.email}
+              readOnly
             />
 
             {/* bio  */}
@@ -68,6 +103,7 @@ const UpdateProfile = () => {
             <textarea
               className="textarea w-full bg-base-200"
               placeholder="You can add your biography here....."
+              defaultValue={loginUser.bio}
               {...register("bio", { required: "Bio is required" })}
             ></textarea>
             {errors.bio && (

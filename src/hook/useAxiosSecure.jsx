@@ -11,7 +11,11 @@ const useAxiosSecure = () => {
   useEffect(() => {
     // request interceptor
     const reqInterceptor = instance.interceptors.request.use((config) => {
-      config.headers.Authorization = `Bearer ${user?.accessToken}`;
+      const token = localStorage.getItem('accessToken');
+      if(token){
+
+        config.headers.Authorization = `Bearer ${token}`;
+      }
       return config;
     });
 
@@ -21,7 +25,7 @@ const useAxiosSecure = () => {
         return response;
       },
       (error) => {
-        const statusCode = error.status;
+        const statusCode = error.response?.status;
 
         if (statusCode === 401 || statusCode === 403) {
           logOut().then(() => {

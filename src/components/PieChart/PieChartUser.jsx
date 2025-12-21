@@ -1,13 +1,13 @@
 import React from "react";
 import { Cell, Pie, PieChart } from "recharts";
 
-const PieCartUser = () => {
-    const participated= 11;
-    const won= 3;
+const PieCartUser = ({loginUser}) => {
+    const participated= loginUser.totalParticipations;
+    const won= loginUser.totalWins;
     const winingPercentage =((won/participated)*100).toFixed(2)
   const data = [
-    { name: "participated", value: 11 },
-    { name: "won", value: 3 },
+    { name: "participated", value: participated },
+    { name: "won", value: won },
   ];
   const colors=[ "#E5E7EB","#3B82F6"]
   return (

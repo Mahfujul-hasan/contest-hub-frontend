@@ -94,7 +94,7 @@ const MyContests = () => {
                   )}
                 </td>
                 <td>
-                  <Link>
+                  <Link to={`/dashboard/my-contests/submissions/${contest._id}`}>
                     <button className="btn bg-purple-200 text-purple-700 rounded-full">
                       See submission
                     </button>
