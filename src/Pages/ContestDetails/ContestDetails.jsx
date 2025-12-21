@@ -41,7 +41,7 @@ const ContestDetails = () => {
     },
   });
 
-  const { data: participation, isLoading: participationLoading } = useQuery({
+  const { data: participation=null, isLoading: participationLoading } = useQuery({
     queryKey: ["participation", contest?._id, participant?._id],
     enabled: !!contest?._id && !!participant?._id,
     queryFn: async () => {
@@ -52,7 +52,16 @@ const ContestDetails = () => {
     },
   });
 
-  if (contestLoading || participantLoading || participationLoading) {
+ 
+  const {data:submission, isLoading:submissionLoading}=useQuery({
+    queryKey:["submission",participant?._id,id],
+    queryFn:async()=>{
+      const res = await axiosSecure.get(`/submissions/user-submission-status?userId=${participant._id}&contestId=${id}`)
+      return res.data
+    }
+  })
+  
+  if (contestLoading || participantLoading || participationLoading||submissionLoading) {
     return <Spinner/>;
   }
 
@@ -167,19 +176,29 @@ const ContestDetails = () => {
         </div>
       </div>
 
+      {
+        contest.winnerId && <div className="bg-purple-100 rounded-3xl p-10 mx-5">
+          <h3 className="text-primary text-4xl font-bold text-center">Winner declared of the contest</h3>
+          <div className="flex flex-col items-center">
+            <img src={contest.winnerPhoto} alt="" className="rounded-full border-2 border-purple-700 w-28 h-28" />
+            <h3 className="text-2xl font-bold text-purple-700">{contest.winnerName}</h3>
+          </div>
+        </div>
+      }
+
       {new Date() < new Date(contest.deadline) && (
         <>
           <div className="mx-5 mt-5">
             <button
               onClick={handlePayment}
-              disabled={participation.paymentStatus === "paid"}
+              disabled={participation?.paymentStatus === "paid"}
               className={`btn ${
-                participation.paymentStatus === "paid"
+                participation?.paymentStatus === "paid"
                   ? "bg-gray-500"
                   : "bg-blue-500 cursor-pointer"
               }  w-full text-white text-2xl font-bold py-7 rounded-2xl`}
             >
-              {participation.paymentStatus === "paid"
+              {participation?.paymentStatus === "paid"
                 ? "Registered"
                 : "Register & Pay"}
             </button>
@@ -197,11 +216,12 @@ const ContestDetails = () => {
               </li>
             </ul>
           </div>
-          {participation.paymentStatus === "paid" && (
+          {participation?.paymentStatus === "paid" && (
             <div className="mx-5 mt-5">
               <button
                 onClick={handleSubmitModal}
-                className="btn bg-blue-500 w-full text-white text-2xl font-bold py-7 rounded-2xl"
+                disabled={submission}
+                className={`btn ${submission?"bg-gray-500":"bg-blue-500"} w-full text-white text-2xl font-bold py-7 rounded-2xl`}
               >
                 submit task
               </button>
@@ -231,7 +251,7 @@ const ContestDetails = () => {
                             {errors.submissionLink.message}
                           </p>
                         )}
-                        <button className="btn bg-[#225ce5] text-white text-lg font-semibold">
+                        <button className="btn bg-[#225ce5] text-white text-lg font-semibold" disabled={submission}>
                           Submit
                         </button>
                       </fieldset>

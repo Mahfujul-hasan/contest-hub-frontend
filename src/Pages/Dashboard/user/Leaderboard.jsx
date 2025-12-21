@@ -7,7 +7,7 @@ const Leaderboard = () => {
   const axiosSecure = useAxiosSecure();
 
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const itemsPerPage = 10;
 
   const { data: users, isLoading: usersLoading } = useQuery({
     queryKey: ["users"],

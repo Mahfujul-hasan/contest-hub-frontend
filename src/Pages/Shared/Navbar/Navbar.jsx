@@ -8,9 +8,23 @@ import { FaChartBar, FaHome } from "react-icons/fa";
 import { IoMdMoon } from "react-icons/io";
 import { BsFillSunFill } from "react-icons/bs";
 import ThemeControler from "../../../components/ThemeControler/ThemeControler";
+import useAxiosSecure from "../../../hook/useAxiosSecure";
+import { useQuery } from "@tanstack/react-query";
+import Spinner from "../../../components/Spinner/Spinner";
 
 const Navbar = () => {
   const { user, logOut } = useAuth();
+  const axiosSecure=useAxiosSecure()
+  const {data:loginUser, isLoading:loginUserLoading}=useQuery({
+    queryKey:["users",user?.email],
+    queryFn:async()=>{
+        const res = await axiosSecure.get(`/users/${user.email}`);
+        return res.data
+    }
+  })
+  if(loginUserLoading){
+    return <Spinner/>
+  }
 
   const links = (
     <>
@@ -93,7 +107,7 @@ const Navbar = () => {
                 <div tabIndex={0}>
                   <Link>
                     <img
-                      src={user.photoURL}
+                      src={loginUser.photoURL}
                       alt=""
                       className="w-12 h-12 rounded-full border-2 border-primary"
                     />
@@ -105,7 +119,7 @@ const Navbar = () => {
                 >
                   <li className="">
                     <h3 className="mx-auto text-xl font-bold text-primary hover:bg-transparent">
-                      {user.displayName}
+                      {loginUser.displayName}
                     </h3>
                   </li>
 

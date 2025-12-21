@@ -11,6 +11,7 @@ import { useQuery } from "@tanstack/react-query";
 import { BsFillPersonFill } from "react-icons/bs";
 import { FiPlusCircle } from "react-icons/fi";
 import { FaTasks, FaTrophy, FaUsersCog } from "react-icons/fa";
+import Spinner from "../components/Spinner/Spinner";
 
 const DashboardLayout = () => {
   const { user } = useAuth();
@@ -23,6 +24,16 @@ const DashboardLayout = () => {
       return res.data.role;
     },
   });
+  const {data:loginUser, isLoading:loginUserLoading}=useQuery({
+    queryKey:["users",user?.email],
+    queryFn:async()=>{
+        const res = await axiosSecure.get(`/users/${user.email}`);
+        return res.data
+    }
+  })
+  if(loginUserLoading){
+    return <Spinner/>
+  }
 
   return (
     <div className="drawer lg:drawer-open max-w-7xl mx-auto">
@@ -45,7 +56,7 @@ const DashboardLayout = () => {
           </div>
           <div className="navbar-end mx-5">
             <img
-              src={user.photoURL}
+              src={loginUser.photoURL}
               alt=""
               className="w-14 h-14 rounded-full border-2 border-primary p-0.5"
             />

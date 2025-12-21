@@ -1,6 +1,8 @@
 ## Website Name:ContestHub
 ## live Link: https://golden-dusk-c8a239.netlify.app/
 
+## extra two section: statistics and resources
+
 ## Website features:
 - user can search contest by contest type in the search bar.
 - user can login and sign up using google login and email password

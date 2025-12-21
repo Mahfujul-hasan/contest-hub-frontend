@@ -28,7 +28,7 @@ const WinnerAdvertisement = () => {
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-10 mx-auto'>
 
                 {
-                    winners.map(winner=><div className='max-w-96 flex flex-col items-center p-5 rounded-lg shadow-xl'>
+                    winners.map(winner=><div key={winner._id} className='max-w-96 flex flex-col items-center p-5 rounded-lg shadow-xl'>
                     <figure>
                         <img src={winner.winnerPhoto} alt=""  className='w-25 h-25 rounded-full border-2 border-green-500' />
                     </figure>
