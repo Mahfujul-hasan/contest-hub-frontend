@@ -14,8 +14,8 @@ const Resources = () => {
   const PhotographyModalRef = useRef();
 
   return (
-    <div className="min-h-screen max-w-7xl mx-auto">
-      <h3 className="text-4xl font-bold text-center mb-3">Learning Hub</h3>
+    <div className="min-h-screen max-w-7xl mx-auto my-10">
+      <h3 className="text-4xl font-bold text-center mb-3 text-primary">Learning Hub</h3>
       <p className="text-info-content text-base font-medium text-center">
         Master the skills to create winning submissions
       </p>
