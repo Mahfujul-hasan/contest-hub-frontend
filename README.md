@@ -14,3 +14,30 @@
 - creator can post, update contest and declare winner
 - admin can change user role and approved post
 - user can see leaderboard, wining contest, participated contest. and can update their profile.
+--
+## Technologies Used
+- React
+- Tailwind CSS
+- Node.js
+- Express.js
+- MongoDB
+- TanStack Query
+
+## Core Features
+- User authentication and role-based access
+- CRUD operations
+- Responsive design
+- Pagination and optimized data fetching
+
+## Dependencies
+- React Hook Form
+- SweetAlert
+- TanStack Query
+- Axios
+--
+## ⚙️ Run Locally
+1. Clone the repository
+2. npm install
+3. npm run dev
+
+
