@@ -34,9 +34,9 @@
 - SweetAlert
 - TanStack Query
 - Axios
-## 🖥️ Screenshot
+## Screenshot
 ![Project Screenshot](https://i.ibb.co.com/prG2bxRJ/83-E9-B736-6939-49-D7-8218-F23259-E33-B85.png)
-## ⚙️ Run Locally
+## Run Locally
 1. Clone the repository
 2. npm install
 3. npm run dev
