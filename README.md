@@ -1,7 +1,8 @@
 ## Website Name:ContestHub
 ## live Link: https://golden-dusk-c8a239.netlify.app/
 
-## extra two section: statistics and resources
+## overview
+<p>A contest platform where users can search contests by type, sign up/login via Google or email, participate in contests, make payments, and access learning resources. Role-based dashboards allow creators to post/update contests and declare winners, admins to manage users and approve posts, and users to view leaderboards, their contests, and update profiles. The platform also features a statistics page to track performance.</p>
 
 ## Website features:
 - user can search contest by contest type in the search bar.
