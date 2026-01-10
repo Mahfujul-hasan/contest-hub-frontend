@@ -11,11 +11,13 @@ import ThemeControler from "../../../components/ThemeControler/ThemeControler";
 import useAxiosSecure from "../../../hook/useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
 import Spinner from "../../../components/Spinner/Spinner";
+import { MdOutlineHome } from "react-icons/md";
+import { GoHome } from "react-icons/go";
 
 const Navbar = () => {
   const { user, logOut } = useAuth();
   const axiosSecure = useAxiosSecure();
-  const { data: loginUser} = useQuery({
+  const { data: loginUser } = useQuery({
     queryKey: ["users", user?.email],
     queryFn: async () => {
       const res = await axiosSecure.get(`/users/${user.email}`);
@@ -27,7 +29,7 @@ const Navbar = () => {
     <>
       <li className="text-lg font-semibold">
         <NavLink to="/">
-          <FaHome />
+          <GoHome />
           Home
         </NavLink>
       </li>
@@ -59,8 +61,8 @@ const Navbar = () => {
       });
   };
   return (
-    <div className="bg-base-100 sticky top-0 left-0 right-0 z-10">
-      <nav className="navbar max-w-7xl mx-auto ;g:px-10 shadow-sm ">
+    <div className="bg-base-100 sticky top-0 left-0 right-0 z-10 shadow-sm ">
+      <nav className="navbar max-w-[1440px] mx-auto lg:px-10 ">
         <div className="navbar-start">
           <div className="dropdown">
             <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
@@ -97,7 +99,6 @@ const Navbar = () => {
           <ThemeControler />
         </div>
         <div className="navbar-end space-x-3">
-          
           {user && loginUser ? (
             <>
               <div className="dropdown dropdown-end ">

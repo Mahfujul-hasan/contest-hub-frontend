@@ -1,41 +1,68 @@
-import React from 'react';
-import { BsPeople } from 'react-icons/bs';
-import { FaRegStar } from 'react-icons/fa';
-import { GoGift } from 'react-icons/go';
+import React from "react";
+import { MdVerified, MdCardGiftcard, MdGroups } from "react-icons/md";
+
+const features = [
+  {
+    title: "Quality Contests",
+    description:
+      "All contests are verified and curated to ensure legitimacy and fair competition for all participants.",
+    icon: <MdVerified size={36} />,
+    bg: "bg-secondary/10",
+    text: "text-secondary",
+  },
+  {
+    title: "Real Prizes",
+    description:
+      "Win cash prizes, equipment, software licenses, and recognition from industry leaders.",
+    icon: <MdCardGiftcard size={36} />,
+    bg: "bg-primary/10",
+    text: "text-primary",
+  },
+  {
+    title: "Vibrant Community",
+    description:
+      "Join thousands of creators, get feedback, and grow your skills with a supportive community.",
+    icon: <MdGroups size={36} />,
+    bg: "bg-success/10",
+    text: "text-success",
+  },
+];
 
 const WhyChooseContestHub = () => {
-    return (
-        <div className='max-w-7xl mx-auto my-20'>
-            <h3 className='text-center text-4xl font-bold text-primary '>Why Choose ContestHub?</h3>
-            <div className='mt-10 grid grid-cols-1 lg:grid-cols-3 gap-5 mx-5'>
-                <div className='flex flex-col items-center shadow-lg bg-white rounded-2xl p-10 space-y-5'>
-                    <div className='bg-linear-to-br from-purple-500 to-pink-500 text-white p-5 rounded-full'>
+  return (
+    <section className="py-10 bg-base-100">
+      <div>
+        {/* HEADER */}
+        <h2 className="text-3xl text-primary font-semibold text-center mb-5">
+          Why Choose ContestHub?
+        </h2>
 
-                    <FaRegStar size={40} />
-                    </div>
-                    <h3 className='text-xl font-bold'>Quality Contests</h3>
-                    <p className='text-black/60 text-center'>All contests are verified and curated to ensure legitimacy and fair competition for all participants.</p>
-                </div>
-                <div className='flex flex-col items-center shadow-lg bg-white rounded-2xl p-10 space-y-5'>
-                    <div className='bg-linear-to-br from-blue-500 to-cyan-500 text-white p-5 rounded-full'>
+        {/* CARDS */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          {features.map((item) => (
+            <div
+              key={item.title}
+              className="bg-base-200 p-10 rounded-md border border-base-300 text-center transition-transform duration-300 hover:-translate-y-2"
+            >
+              <div
+                className={`w-20 h-20 ${item.bg} ${item.text} rounded-2xl flex items-center justify-center mx-auto mb-8`}
+              >
+                {item.icon}
+              </div>
 
-                    <GoGift  size={40} />
-                    </div>
-                    <h3 className='text-xl font-bold'>Real Prizes</h3>
-                    <p className='text-black/60 text-center'>Win cash prizes, equipment, software licenses, and recognition from industry leaders.</p>
-                </div>
-                <div className='flex flex-col items-center shadow-lg bg-white rounded-2xl p-10 space-y-5'>
-                    <div className='bg-linear-to-br from-green-500 to-emerald-500 text-white p-5 rounded-full'>
+              <h3 className="text-xl font-semibold text-base-content mb-4">
+                {item.title}
+              </h3>
 
-                    <BsPeople size={40} />
-                    </div>
-                    <h3 className='text-xl font-bold'>Vibrant Community</h3>
-                    <p className='text-black/60 text-center'>Join thousands of creators, get feedback, and grow your skills with a supportive community.</p>
-                </div>
+              <p className="text-base-content/70 leading-relaxed">
+                {item.description}
+              </p>
             </div>
-            
+          ))}
         </div>
-    );
+      </div>
+    </section>
+  );
 };
 
 export default WhyChooseContestHub;

@@ -3,33 +3,51 @@ import { MdPeople } from "react-icons/md";
 import { Link } from "react-router";
 
 const ContestCard = ({ contest }) => {
-  
   return (
-    <div className="card bg-base-100  shadow-lg p-3">
-      <figure>
+    <div className="card bg-base-200 shadow-xl rounded-md overflow-hidden">
+      
+      {/* IMAGE */}
+      <figure className="h-40 overflow-hidden">
         <img
           src={contest.contestImage}
-          alt="Shoes"
-          className=" w-full rounded-lg h-72"
+          alt={contest.contestName}
+          className="w-full h-full object-cover"
         />
       </figure>
-      <div className="card-body">
-        <div className="flex items-center justify-between">
-          <h2 className="card-title">{contest.contestName}</h2>
-          <div className="badge badge-soft badge-primary text-base font-bold">
-            <MdPeople />
+
+      {/* BODY */}
+      <div className="p-2 space-y-2 gap-4">
+        
+        {/* TITLE + BADGE */}
+        <div className="flex items-start justify-between mt-2">
+          <h2 className="card-title text-base-content text-base font-semibold">
+            {contest.contestName}
+          </h2>
+
+          <div className="badge badge-outline badge-primary gap-1">
+            <MdPeople className="text-lg" />
             {contest.participantsCount}
           </div>
         </div>
-        <p className="text-base">{contest.contestDescription.slice(0, 100)} <Link to={`/contest-details/${contest._id}`}><span className="font-bold">read more...</span></Link></p>
+
+        {/* DESCRIPTION */}
+        <p className="text-sm text-base-content/70">
+          {contest.contestDescription.slice(0, 40)}{" "}
+          <Link
+            to={`/contest-details/${contest._id}`}
+            className="text-primary font-medium"
+          >
+            read more...
+          </Link>
+        </p>
+
+        {/* BUTTON */}
         <div className="card-actions">
-          <div className="w-full">
-            <Link to={`/contest-details/${contest._id}`}>
-              <button className="badge badge-info font-bold text-lg text-white py-5 cursor-pointer w-full">
-                Details
-              </button>
-            </Link>
-          </div>
+          <Link to={`/contest-details/${contest._id}`} className="w-full">
+            <button className="btn btn-primary w-full rounded-md text-white">
+              Details
+            </button>
+          </Link>
         </div>
       </div>
     </div>

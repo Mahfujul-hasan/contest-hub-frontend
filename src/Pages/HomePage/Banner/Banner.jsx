@@ -20,18 +20,19 @@ const Banner = () => {
   });
 
   return (
-    <div className=" rounded-2xl bg-linear-65 from-indigo-500 via-purple-500 to-pink-500 mx-auto py-10 mt-10">
-      <h3 className="text-4xl font-bold text-white text-center my-5">
+
+      <div className="min-h-[70vh] my-auto flex flex-col items-center justify-center rounded-2xl bg-linear-135 from-[#6366f1] via-[#a855f7] to-[#ec4899] mx-auto py-10">
+      <h3 className="text-4xl md:text-6xl font-semibold mb-6 text-white text-center">
         Discover & Host Amazing <br />
         Creative Contests
       </h3>
-      <p className="text-white/90 text-center text-base my-5">
+      <p className="text-lg md:text-xl text-white/90 max-w-4xl mx-auto mb-12 font-medium text-center">
         Join logo, writing, business idea, gaming review and photography
         contests - or create your own. Find opportunities compete, and get
         rewarded
       </p>
       <div className="flex items-center justify-center mt-5">
-        <label className={`input input-neutral bg-white border border-white text-black/80 rounded-2xl ${searchedContests.length>0&&"rounded-b-none"}  w-3xl mx-5`}>
+        <label className={`input input-neutral bg-white border border-white text-black/80 rounded-2xl ${searchedContests.length>0&&"rounded-b-none"} w-xs md:w-xl lg:w-3xl mx-5`}>
           <svg
             className="h-[1em] opacity-50"
             xmlns="http://www.w3.org/2000/svg"
@@ -61,7 +62,7 @@ const Banner = () => {
       
       <div className="flex justify-center">
         {searchedContests.length > 0 &&
-          <div className="bg-white px-5 mt-0 mx-5 border-t border-gray-200 max-h-52 overflow-y-auto w-3xl z-10 rounded-3xl rounded-t-none">
+          <div className="bg-white px-5 mt-0 mx-5 border-t border-gray-200 max-h-52 overflow-y-auto w-xs md:w-xl lg:w-3xl z-10 rounded-3xl rounded-t-none">
             {searchedContests.map((contest) => (
               <div className="flex justify-between items-center text-black/60">
                 <div className="flex items-center gap-3">
@@ -79,6 +80,7 @@ const Banner = () => {
         }
       </div>
     </div>
+
   );
 };
 
