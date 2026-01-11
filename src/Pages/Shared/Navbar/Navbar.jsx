@@ -50,6 +50,11 @@ const Navbar = () => {
           <IoBookOutline /> Resources
         </NavLink>
       </li>
+      <li className="text-lg font-semibold">
+        <NavLink to="contact-us">
+          <IoBookOutline /> Contact
+        </NavLink>
+      </li>
     </>
   );
 

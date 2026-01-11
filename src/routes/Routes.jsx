@@ -27,6 +27,7 @@ import AdminRouter from "./AdminRouter";
 import Leaderboard from "../Pages/Dashboard/user/Leaderboard";
 import Statistics from "../Pages/StatisticsPage/Statistics";
 import Resources from "../Pages/Resources/Resources";
+import ContactUs from "../Pages/ContactUs/ContactUs";
 
 export const router = createBrowserRouter([
   {
@@ -53,6 +54,10 @@ export const router = createBrowserRouter([
         {
           path:'resources',
           Component:Resources
+        },
+        {
+          path:'contact-us',
+          Component:ContactUs
         },
         {
           path:'payment-success',

@@ -15,8 +15,8 @@ const Home = () => {
             <PopularContests />
             <HowItWorks/>
             <ToolsFeatures/>
-            <WinnerAdvertisement />
             <WhyChooseContestHub/>
+            <WinnerAdvertisement />
         </div>
     );
 };

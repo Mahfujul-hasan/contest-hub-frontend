@@ -2,6 +2,8 @@ import React from "react";
 import Logo from "../../../components/Logo/Logo";
 import { FaFacebookF, FaLinkedinIn, FaYoutube } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
+import { Link } from "react-router";
+import { SiGmail } from "react-icons/si";
 
 
 const Footer = () => {
@@ -23,28 +25,20 @@ const Footer = () => {
           experience for all user roles.
         </p>
 
+        <div className="mb-5">
+          <ul className="flex flex-col md:flex-row lg:flex-row justify-center items-center gap-2 md:gap-8 lg:gap-8 text-base-content/70">
+            <li className="hover:text-primary"><Link to={"/"}>Home</Link></li>
+            <li className="hover:text-primary"><Link to={"/statistics"}>Statistics</Link></li>
+            <li className="hover:text-primary"><Link to={"/resources"}>Resources</Link></li>
+            <li className="hover:text-primary"><Link to={"/contact-us"}>Contact Us</Link></li>
+            
+          </ul>
+        </div>
+
         {/* SOCIAL LINKS */}
         <div className="flex justify-center gap-8 mb-12">
           <a
-            href="https://x.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-slate-400 hover:text-brand-purple transition-colors"
-          >
-            <FaXTwitter size={22} />
-          </a>
-
-          <a
-            href="https://www.youtube.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-slate-400 hover:text-brand-purple transition-colors"
-          >
-            <FaYoutube size={22} />
-          </a>
-
-          <a
-            href="https://www.facebook.com/"
+            href="https://www.facebook.com/mahfujul.sirat"
             target="_blank"
             rel="noopener noreferrer"
             className="text-slate-400 hover:text-brand-purple transition-colors"
@@ -53,12 +47,20 @@ const Footer = () => {
           </a>
 
           <a
-            href="https://www.linkedin.com/"
+            href="https://www.linkedin.com/in/mahfujul-hasan-dev/"
             target="_blank"
             rel="noopener noreferrer"
             className="text-slate-400 hover:text-brand-purple transition-colors"
           >
             <FaLinkedinIn size={22} />
+          </a>
+          <a
+            href="https://mail.google.com/mail/?view=cm&fs=1&to=mahfujulsirat00@gmail.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-slate-400 hover:text-brand-purple transition-colors"
+          >
+            <SiGmail size={22} />
           </a>
         </div>
 

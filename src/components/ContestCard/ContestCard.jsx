@@ -4,8 +4,7 @@ import { Link } from "react-router";
 
 const ContestCard = ({ contest }) => {
   return (
-    <div className="card bg-base-200 shadow-xl rounded-md overflow-hidden">
-      
+    <div className="card bg-base-200 shadow-xl rounded-md overflow-hidden h-full flex flex-col">
       {/* IMAGE */}
       <figure className="h-40 overflow-hidden">
         <img
@@ -16,10 +15,9 @@ const ContestCard = ({ contest }) => {
       </figure>
 
       {/* BODY */}
-      <div className="p-2 space-y-2 gap-4">
-        
+      <div className="p-3 flex flex-col flex-1">
         {/* TITLE + BADGE */}
-        <div className="flex items-start justify-between mt-2">
+        <div className="flex items-start justify-between mb-2">
           <h2 className="card-title text-base-content text-base font-semibold">
             {contest.contestName}
           </h2>
@@ -31,7 +29,7 @@ const ContestCard = ({ contest }) => {
         </div>
 
         {/* DESCRIPTION */}
-        <p className="text-sm text-base-content/70">
+        <p className="text-sm text-base-content/70 mb-4">
           {contest.contestDescription.slice(0, 40)}{" "}
           <Link
             to={`/contest-details/${contest._id}`}
@@ -41,9 +39,9 @@ const ContestCard = ({ contest }) => {
           </Link>
         </p>
 
-        {/* BUTTON */}
-        <div className="card-actions">
-          <Link to={`/contest-details/${contest._id}`} className="w-full">
+        {/* BUTTON – always bottom */}
+        <div className="mt-auto">
+          <Link to={`/contest-details/${contest._id}`} className="w-full block">
             <button className="btn btn-primary w-full rounded-md text-white">
               Details
             </button>
