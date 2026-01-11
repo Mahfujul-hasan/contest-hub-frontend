@@ -1,7 +1,6 @@
 import React from "react";
-import { Link, Outlet } from "react-router";
-import Logo from "../components/Logo/Logo";
-import { IoHome, IoSettingsOutline } from "react-icons/io5";
+import { Link, NavLink, Outlet } from "react-router";
+import { IoHome } from "react-icons/io5";
 import { RiListCheck2, RiMedal2Fill } from "react-icons/ri";
 import { AiOutlineMenuUnfold } from "react-icons/ai";
 import { MdLeaderboard, MdSpaceDashboard } from "react-icons/md";
@@ -11,243 +10,231 @@ import { useQuery } from "@tanstack/react-query";
 import { BsFillPersonFill } from "react-icons/bs";
 import { FiPlusCircle } from "react-icons/fi";
 import { FaTasks, FaTrophy, FaUsersCog } from "react-icons/fa";
-import Spinner from "../components/Spinner/Spinner";
+import ThemeControler from "../components/ThemeControler/ThemeControler";
+import Logo from "../components/Logo/Logo";
 
 const DashboardLayout = () => {
-  const { user} = useAuth();
-
+  const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
+
   const { data: userRole } = useQuery({
-    queryKey: ["users", user.email],
+    queryKey: ["users", user?.email],
     queryFn: async () => {
       const res = await axiosSecure.get(`/users/${user.email}/role`);
       return res.data.role;
     },
+    enabled: !!user?.email,
   });
-  const {data:loginUser}=useQuery({
-    queryKey:["users",user?.email],
-    queryFn:async()=>{
-        const res = await axiosSecure.get(`/users/${user.email}`);
-        return res.data
-    }
-  })
-  
+
+  const { data: loginUser } = useQuery({
+    queryKey: ["user-profile", user?.email],
+    queryFn: async () => {
+      const res = await axiosSecure.get(`/users/${user.email}`);
+      return res.data;
+    },
+    enabled: !!user?.email,
+  });
+
   return (
-    <div className="drawer lg:drawer-open max-w-7xl mx-auto">
+    <div className="drawer lg:drawer-open max-w-7xl mx-auto text-base-content">
       <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
+
+      {/* ================= CONTENT ================= */}
       <div className="drawer-content">
         {/* Navbar */}
-        <nav className="navbar w-full bg-white rounded-2xl shadow-md my-3">
-          <div className="navbar-start">
-            <label
-              htmlFor="my-drawer-4"
-              aria-label="open sidebar"
-              className="btn btn-square btn-ghost"
-            >
-              {/* Sidebar toggle icon */}
+        <nav className="navbar bg-base-100 shadow my-3 border-b-2 border-base-200 sticky top-0 left-0 right-0 z-10">
+          <div className="navbar-start space-x-5">
+            <label htmlFor="my-drawer-4" className="btn btn-square btn-ghost">
               <AiOutlineMenuUnfold size={24} />
             </label>
-            <div className="px-4 text-2xl font-bold text-transparent bg-clip-text bg-linear-65 from-indigo-500 via-purple-500 to-pink-500">
-              ContestHub Dashboard
+
+            <Logo />
+          </div>
+
+          {user && loginUser && (
+            <div className="navbar-end mx-5 space-x-5">
+              <div>
+                <ThemeControler />
+              </div>
+              <img
+                src={loginUser.photoURL}
+                alt="profile"
+                className="w-14 h-14 rounded-full border-2 border-primary p-0.5"
+              />
             </div>
-          </div>
-          {
-          (user && loginUser) &&
-          <div className="navbar-end mx-5">
-            <img
-              src={loginUser.photoURL}
-              alt=""
-              className="w-14 h-14 rounded-full border-2 border-primary p-0.5"
-            />
-          </div>
-          }
-          
+          )}
         </nav>
-        {/* Page content here */}
+
         <Outlet />
       </div>
 
-      <div className="drawer-side is-drawer-close:overflow-visible">
-        <label
-          htmlFor="my-drawer-4"
-          aria-label="close sidebar"
-          className="drawer-overlay"
-        ></label>
-        <div className="flex min-h-full flex-col items-start bg-white is-drawer-close:w-14 is-drawer-open:w-64 rounded-2xl mx-3 shadow-lg ">
-          {/* Sidebar content here */}
+      {/* ================= SIDEBAR ================= */}
+      <div className="drawer-side">
+        <label htmlFor="my-drawer-4" className="drawer-overlay"></label>
+
+        <aside className="flex min-h-full flex-col bg-base-100 rounded-md mx-3 shadow-lg is-drawer-close:w-14 is-drawer-open:w-64 border-r-2 border-base-200">
           <ul className="menu w-full grow">
-            {/* List item */}
             <li>
               <div className="is-drawer-close:hidden">
                 <Logo />
               </div>
             </li>
 
-            {/* List item-Home */}
-            <li className="mt-5 text-primary">
-              <Link
+            <li className="mt-5">
+              <NavLink
                 to="/"
-                className="is-drawer-close:tooltip is-drawer-close:tooltip-bottom tooltip-primary"
+                className={({ isActive }) =>
+                  `tooltip tooltip-primary ${isActive ? "text-primary" : ""}`
+                }
                 data-tip="Homepage"
               >
-                {/* Home icon */}
                 <IoHome size={18} />
-                <span className="is-drawer-close:hidden text-base font-bold">
+                <span className="is-drawer-close:hidden font-bold">
                   Homepage
                 </span>
-              </Link>
+              </NavLink>
             </li>
 
-            {/* List item-dashboard */}
-            <li className="mt-5 text-primary">
-              <Link
+            <li className="mt-3">
+              <NavLink
                 to="/dashboard"
-                className="is-drawer-close:tooltip is-drawer-close:tooltip-bottom tooltip-primary"
+                className={({ isActive }) =>
+                  `tooltip tooltip-primary ${isActive ? "text-primary" : ""}`
+                }
                 data-tip="Dashboard"
               >
-                {/* Dashboard icon */}
                 <MdSpaceDashboard size={18} />
-                <span className="is-drawer-close:hidden text-base font-bold">
+                <span className="is-drawer-close:hidden font-bold">
                   Dashboard
                 </span>
-              </Link>
+              </NavLink>
             </li>
 
             {userRole === "user" && (
               <>
-                {/* List item-My participated contests */}
-                <li className="text-primary mt-3">
-                  <Link
+                <li>
+                  <NavLink
                     to="/dashboard/my-participated-contests"
-                    className="is-drawer-close:tooltip is-drawer-close:tooltip-bottom tooltip-primary"
-                    data-tip="My Participated Contests"
+                    className={({ isActive }) =>
+                      isActive ? "text-primary" : ""
+                    }
                   >
                     <RiMedal2Fill size={18} />
-                    <span className="is-drawer-close:hidden text-base font-bold">
+                    <span className="is-drawer-close:hidden font-bold">
                       My Participated Contests
                     </span>
-                  </Link>
+                  </NavLink>
                 </li>
 
-                {/* List item-My winning contests */}
-                <li className="text-primary mt-3">
-                  <Link
+                <li>
+                  <NavLink
                     to="/dashboard/my-winnings-contests"
-                    className="is-drawer-close:tooltip is-drawer-close:tooltip-bottom tooltip-primary"
-                    data-tip="My winning Contests"
+                    className={({ isActive }) =>
+                      isActive ? "text-primary" : ""
+                    }
                   >
                     <FaTrophy size={18} />
-                    <span className="is-drawer-close:hidden text-base font-bold">
+                    <span className="is-drawer-close:hidden font-bold">
                       My Winning Contests
                     </span>
-                  </Link>
+                  </NavLink>
                 </li>
 
-                {/* List item-My profile */}
-                <li className="text-primary mt-3">
-                  <Link
+                <li>
+                  <NavLink
                     to="/dashboard/my-profile"
-                    className="is-drawer-close:tooltip is-drawer-close:tooltip-bottom tooltip-primary"
-                    data-tip="My Profile"
+                    className={({ isActive }) =>
+                      isActive ? "text-primary" : ""
+                    }
                   >
                     <BsFillPersonFill size={18} />
-                    <span className="is-drawer-close:hidden text-base font-bold">
+                    <span className="is-drawer-close:hidden font-bold">
                       My Profile
                     </span>
-                  </Link>
+                  </NavLink>
                 </li>
 
-                {/* List item-Leaderboard */}
-                <li className="text-primary mt-3">
-                  <Link
+                <li>
+                  <NavLink
                     to="/dashboard/leaderboard"
-                    className="is-drawer-close:tooltip is-drawer-close:tooltip-bottom tooltip-primary"
-                    data-tip="Leaderboard"
+                    className={({ isActive }) =>
+                      isActive ? "text-primary" : ""
+                    }
                   >
-                    
                     <MdLeaderboard size={18} />
-                    <span className="is-drawer-close:hidden text-base font-bold">
+                    <span className="is-drawer-close:hidden font-bold">
                       Leaderboard
                     </span>
-                  </Link>
+                  </NavLink>
                 </li>
               </>
             )}
-
-            {/* for contest creator role  */}
 
             {userRole === "creator" && (
               <>
-                {/* List item-Add contest */}
-                <li className="mt-5 text-primary">
-                  <Link
+                <li>
+                  <NavLink
                     to="/dashboard/add-contest"
-                    className="is-drawer-close:tooltip is-drawer-close:tooltip-bottom tooltip-primary"
-                    data-tip="Add contest"
+                    className={({ isActive }) =>
+                      isActive ? "text-primary" : ""
+                    }
                   >
-                    {/* Dashboard icon */}
                     <FiPlusCircle size={18} />
-                    <span className="is-drawer-close:hidden text-base font-bold">
+                    <span className="is-drawer-close:hidden font-bold">
                       Add Contest
                     </span>
-                  </Link>
+                  </NavLink>
                 </li>
 
-                {/* List item-my contests */}
-                <li className="mt-5 text-primary">
-                  <Link
+                <li>
+                  <NavLink
                     to="/dashboard/my-contests"
-                    className="is-drawer-close:tooltip is-drawer-close:tooltip-bottom tooltip-primary"
-                    data-tip="My contests"
+                    className={({ isActive }) =>
+                      isActive ? "text-primary" : ""
+                    }
                   >
-                    {/* My contests icon */}
                     <RiListCheck2 size={18} />
-                    <span className="is-drawer-close:hidden text-base font-bold">
+                    <span className="is-drawer-close:hidden font-bold">
                       My Contests
                     </span>
-                  </Link>
+                  </NavLink>
                 </li>
               </>
             )}
 
-            {/* for admin role  */}
             {userRole === "admin" && (
               <>
-                {/* List item-contest approve */}
-                <li className="mt-5 text-primary">
-                  <Link
+                <li>
+                  <NavLink
                     to="/dashboard/contest-management"
-                    className="is-drawer-close:tooltip is-drawer-close:tooltip-bottom tooltip-primary"
-                    data-tip="Contest management"
+                    className={({ isActive }) =>
+                      isActive ? "text-primary" : ""
+                    }
                   >
-                    {/* contest approve icon */}
                     <FaTasks size={18} />
-                    <span className="is-drawer-close:hidden text-base font-bold">
-                      Contest management
+                    <span className="is-drawer-close:hidden font-bold">
+                      Contest Management
                     </span>
-                  </Link>
+                  </NavLink>
                 </li>
 
-                {/* List item-user management */}
-                <li className="mt-5 text-primary">
-                  <Link
+                <li>
+                  <NavLink
                     to="/dashboard/user-management"
-                    className="is-drawer-close:tooltip is-drawer-close:tooltip-bottom tooltip-primary"
-                    data-tip="User management"
+                    className={({ isActive }) =>
+                      isActive ? "text-primary" : ""
+                    }
                   >
-                    {/* User management icon icon */}
                     <FaUsersCog size={18} />
-                    <span className="is-drawer-close:hidden text-base font-bold">
-                      User management
+                    <span className="is-drawer-close:hidden font-bold">
+                      User Management
                     </span>
-                  </Link>
+                  </NavLink>
                 </li>
               </>
             )}
-
-           
           </ul>
-        </div>
+        </aside>
       </div>
     </div>
   );

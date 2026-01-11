@@ -25,46 +25,47 @@ const Leaderboard = () => {
   const currentUsers = users.slice(startIndex, startIndex + itemsPerPage);
 
   return (
-    <div>
-      <h3 className="text-3xl font-bold text-purple-500 text-center pt-5">
-        Users leaderboard
+    <div className="px-4 sm:px-6 lg:px-8">
+      <h3 className="text-2xl sm:text-3xl font-bold text-primary text-center pt-5">
+        Users Leaderboard
       </h3>
-      <div className="overflow-x-auto border-2 border-purple-200 rounded-3xl my-5 min-h-screen">
-        <table className="table table-zebra">
-          {/* head */}
+
+      <div className="overflow-x-auto border-2 border-purple-200 rounded-3xl my-5 min-h-[50vh]">
+        <table className="table table-zebra w-full min-w-[600px]">
+          {/* Head */}
           <thead>
-            <tr>
-              <th>Position</th>
-              <th>Users Image</th>
-              <th>Users Name</th>
-              <th>Users Email</th>
-              <th>Total Wins</th>
+            <tr className="text-sm sm:text-base">
+              <th className="text-center">Position</th>
+              <th className="text-center">User Image</th>
+              <th className="text-center">User Name</th>
+              <th className="text-center hidden sm:table-cell">User Email</th>
+              <th className="text-center">Total Wins</th>
             </tr>
           </thead>
           <tbody>
             {currentUsers.map((user, index) => (
-              <tr key={user._id}>
-                <th>{startIndex + index + 1}</th>
-                <td>
-                  {" "}
+              <tr key={user._id} className="text-sm sm:text-base">
+                <th className="text-center">{startIndex + index + 1}</th>
+                <td className="text-center">
                   <div className="avatar">
-                    <div className="mask mask-squircle h-12 w-12">
-                      <img
-                        src={user.photoURL}
-                        alt="Avatar Tailwind CSS Component"
-                      />
+                    <div className="mask mask-squircle h-10 w-10 sm:h-12 sm:w-12">
+                      <img src={user.photoURL} alt={user.displayName} />
                     </div>
                   </div>
                 </td>
-                <td>{user.displayName}</td>
-                <td>{user.email}</td>
-                <td>{user.totalWins}</td>
+                <td className="text-center">{user.displayName}</td>
+                <td className="text-center hidden sm:table-cell">
+                  {user.email}
+                </td>
+                <td className="text-center">{user.totalWins}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-      <div className="flex justify-center gap-2 my-6">
+
+      {/* Pagination */}
+      <div className="flex flex-wrap justify-center gap-2 my-6">
         <button
           className="btn btn-sm"
           disabled={currentPage === 1}

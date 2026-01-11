@@ -43,7 +43,7 @@ const UserManagement = () => {
 
     return (
         <div>
-      <h3 className="text-3xl font-bold text-center text-purple-500">
+      <h3 className="text-3xl font-semibold text-center text-secondary">
         Manage All Users
       </h3>
       <div className="overflow-x-auto border-2 border-purple-200 rounded-3xl my-5 min-h-screen">

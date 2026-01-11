@@ -6,7 +6,6 @@ import { MdOutlinePeopleAlt } from "react-icons/md";
 import { BsCurrencyDollar, BsFillTrophyFill } from "react-icons/bs";
 import { PiMedalBold, PiMedalFill, PiMedalLight } from "react-icons/pi";
 import { HiOutlineClipboardList } from "react-icons/hi";
-import { GoTrophy } from "react-icons/go";
 import useAuth from "../../hook/useAuth";
 import DeadlineCountDown from "../../components/DeadlineCountDown/DeadlineCountDown";
 import trophyImg from "../../assets/trophy.png";
@@ -20,7 +19,6 @@ const ContestDetails = () => {
   const axiosSecure = useAxiosSecure();
   const submitModalRef = useRef();
   const [submissionSuccess, setSubmissionSuccess] = useState(false);
-
 
   const {
     register,
@@ -59,7 +57,11 @@ const ContestDetails = () => {
       },
     });
 
-  const { data: submission, isLoading: submissionLoading, refetch: refetchSubmission, } = useQuery({
+  const {
+    data: submission,
+    isLoading: submissionLoading,
+    refetch: refetchSubmission,
+  } = useQuery({
     queryKey: ["submission", participant?._id, id],
     enabled: !!participant?._id && !!id,
     queryFn: async () => {
@@ -79,7 +81,6 @@ const ContestDetails = () => {
   if (loading || contestLoading) {
     return <Spinner />;
   }
-  
 
   const handlePayment = async () => {
     const paymentInfo = {
@@ -129,180 +130,188 @@ const ContestDetails = () => {
         });
       }
     });
-     reset(); 
+    reset();
     setSubmissionSuccess(true);
     refetchSubmission();
   };
   return (
-    <div className="min-h-screen max-w-7xl mx-auto ">
-      <div className="relative">
-        <img src={contest.contestImage} alt="" className="w-full h-80 " />
-        <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/30 to-transparent "></div>
-        <div className="absolute bottom-3 left-5 space-y-3">
-          <h3 className="text-white text-3xl font-bold">
-            {contest.contestName}
-          </h3>
-          <div className="flex items-center gap-8">
-            <button className="flex items-center gap-3 btn rounded-full bg-white/40 border-none text-white text-lg font-medium">
-              <MdOutlinePeopleAlt size={25} />
-              {contest.participantsCount} Participants
-            </button>
-            <button className="flex items-center gap-2 btn rounded-full bg-white/40 border-none text-white text-lg font-medium">
-              <BsCurrencyDollar size={25} />
-              {contest.entryPrice}
-            </button>
-          </div>
-        </div>
+    <div className="min-h-screen max-w-[1440px] mx-auto bg-base-100 transition-colors duration-500 mb-10">
+  {/* Contest Banner */}
+  <div className="relative  overflow-hidden shadow-xl">
+    <img
+      src={contest.contestImage}
+      alt={contest.contestName}
+      className="w-full h-80 object-cover transform transition-transform duration-500 hover:scale-105"
+    />
+    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
+    <div className="absolute bottom-5 left-6 space-y-2">
+      <h3 className="text-white text-4xl md:text-5xl font-extrabold drop-shadow-lg">
+        {contest.contestName}
+      </h3>
+      <p className="text-lg md:text-xl font-medium text-white/90">
+        Type: {contest.contestType}
+      </p>
+
+      <div className="flex flex-wrap items-center gap-4 mt-3">
+        <button className="btn btn-sm btn-outline btn-info gap-2 rounded-full text-white hover:bg-info/20 transition">
+          <MdOutlinePeopleAlt size={20} />
+          {contest.participantsCount} Participants
+        </button>
+        <button className="btn btn-sm btn-outline btn-success gap-2 rounded-full text-white hover:bg-success/20 transition">
+          <BsCurrencyDollar size={20} />
+          {contest.entryPrice}
+        </button>
       </div>
-      <div className="mt-10 mx-5 p-5 rounded-3xl shadow-lg border-l-4 border-l-purple-500 ">
-        <h3 className="text-2xl font-bold flex items-center gap-2 mb-3">
-          <PiMedalBold className="text-blue-600" size={25} />
-          Contest Description
-        </h3>
-        <p className="text-base font-medium max-w-[90%] text-gray-500">
-          {contest.contestDescription}
-        </p>
-      </div>
-
-      <div className="mt-10 mx-5 p-5 rounded-3xl shadow-lg border-l-4 border-l-purple-500 ">
-        <h3 className="text-2xl font-bold flex items-center gap-2 mb-3">
-          <HiOutlineClipboardList className="text-blue-600" size={25} />
-          Task Instruction
-        </h3>
-        <p className="text-base font-medium max-w-[90%] text-gray-500">
-          {contest.taskInstruction}
-        </p>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 mb-5">
-        <div className="mt-10 mx-5 p-5 rounded-3xl shadow-lg bg-[#168d42] text-white flex flex-col justify-center items-center ">
-          <img src={trophyImg} className=" w-12 mb-5" alt="" />
-
-          <div className="relative mb-2">
-            <div className="absolute inset-0 bg-white/10 backdrop-blur-md rounded-full"></div>
-            <h3 className="relative z-10 text-xl font-medium flex items-center gap-2 rounded-full px-5 py-1">
-              Prize Money
-            </h3>
-          </div>
-          <p className="text-5xl font-bold flex items-center">
-            <BsCurrencyDollar size={50} />
-            {contest.prizeMoney}
-          </p>
-        </div>
-        <div>
-          <DeadlineCountDown contest={contest} />
-        </div>
-      </div>
-
-      {contest.winnerId && (
-        <div className="bg-purple-100 rounded-3xl p-10 mx-5">
-          <h3 className="text-primary text-4xl font-bold text-center">
-            Winner declared of the contest
-          </h3>
-          <div className="flex flex-col items-center">
-            <img
-              src={contest.winnerPhoto}
-              alt=""
-              className="rounded-full border-2 border-purple-700 w-28 h-28"
-            />
-            <h3 className="text-2xl font-bold text-purple-700">
-              {contest.winnerName}
-            </h3>
-          </div>
-        </div>
-      )}
-
-      {new Date() < new Date(contest.deadline) && (
-        <>
-          <div className="mx-5 mt-5">
-            {participantLoading || participationLoading ? (
-              <Spinner />
-            ) : (
-              <button
-                onClick={handlePayment}
-                disabled={participation?.paymentStatus === "paid"}
-                className={`btn ${
-                  participation?.paymentStatus === "paid"
-                    ? "bg-gray-500"
-                    : "bg-blue-500 cursor-pointer"
-                }  w-full text-white text-2xl font-bold py-7 rounded-2xl`}
-              >
-                {participation?.paymentStatus === "paid"
-                  ? "Registered"
-                  : "Register & Pay"}
-              </button>
-            )}
-          </div>
-          <div className="mx-5 p-5 bg-blue-50 rounded-3xl mt-5">
-            <ul className="list-disc list-inside">
-              <li className="marker:text-blue-500 text-gray-800 text-base font-semibold">
-                You must register and pay to participate
-              </li>
-              <li className="marker:text-blue-500 text-gray-800 text-base font-semibold">
-                Submit your task before the deadline
-              </li>
-              <li className="marker:text-blue-500 text-gray-800 text-base font-semibold">
-                Winner will be announced after evaluation
-              </li>
-            </ul>
-          </div>
-          {participation?.paymentStatus === "paid" && (
-            <div className="mx-5 mt-5">
-              {submissionLoading ? (
-                <Spinner />
-              ) : (
-                <button
-                  onClick={handleSubmitModal}
-                  disabled={submission}
-                  className={`btn ${
-                    submission ? "bg-gray-500" : "bg-blue-500"
-                  } w-full text-white text-2xl font-bold py-7 rounded-2xl`}
-                >
-                  submit task
-                </button>
-              )}
-              <dialog
-                ref={submitModalRef}
-                className="modal modal-bottom sm:modal-middle"
-              >
-                <div className="modal-box">
-                  <form method="dialog">
-                    {/* if there is a button in form, it will close the modal */}
-                    <button className="btn btn-circle btn-ghost absolute right-2 top-2">
-                      ✕
-                    </button>
-                  </form>
-                  <div className="mt-5">
-                    <form onSubmit={handleSubmit(handleSubmission)}>
-                      <fieldset className="fieldset">
-                        <textarea
-                          className="textarea border w-full"
-                          placeholder="Provide necessary links"
-                          {...register("submissionLink", {
-                            required: "SubmissionLink is required",
-                          })}
-                        ></textarea>
-                        {errors.submissionLink && (
-                          <p className="text-red-500 font-bold">
-                            {errors.submissionLink.message}
-                          </p>
-                        )}
-                        <button
-                          className="btn bg-[#225ce5] text-white text-lg font-semibold"
-                          disabled={submission}
-                        >
-                          Submit
-                        </button>
-                      </fieldset>
-                    </form>
-                  </div>
-                </div>
-              </dialog>
-            </div>
-          )}
-        </>
-      )}
     </div>
+  </div>
+
+  {/* Contest Description */}
+  <div className="mt-10 mx-4 lg:mx-10 p-6 rounded-md shadow-md border-l-4 border-primary bg-base-200  transition-colors hover:shadow-lg">
+    <h3 className="text-2xl md:text-3xl font-bold flex text-primary items-center gap-2 mb-4">
+      <PiMedalBold className="text-primary" size={28} />
+      Contest Description
+    </h3>
+    <p className="text-base md:text-lg font-medium text-base-content/70 leading-relaxed max-w-[90%]">
+      {contest.contestDescription}
+    </p>
+  </div>
+
+  {/* Task Instruction */}
+  <div className="mt-10 mx-4 lg:mx-10 p-6 rounded-md shadow-md border-l-4 border-primary bg-base-200  transition-colors hover:shadow-lg">
+    <h3 className="text-2xl md:text-3xl font-bold flex text-primary items-center gap-2 mb-4">
+      <HiOutlineClipboardList className="text-primary" size={28} />
+      Task Instruction
+    </h3>
+    <p className="text-base md:text-lg font-medium text-base-content/70 leading-relaxed max-w-[90%]">
+      {contest.taskInstruction}
+    </p>
+  </div>
+
+  {/* Prize & Countdown */}
+  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mx-4 lg:mx-10 mb-5 mt-10">
+    <div className="p-6 rounded-md shadow-xl bg-linear-to-r from-green-500 to-green-600 text-white flex flex-col justify-center items-center transition-transform transform hover:-translate-y-2 hover:shadow-2xl">
+      <img src={trophyImg} className="w-12 mb-4" alt="trophy" />
+      <div className="relative mb-2">
+        <div className="absolute inset-0 bg-white/10 backdrop-blur-md rounded-full"></div>
+        <h3 className="relative z-9 text-xl md:text-2xl font-medium flex items-center gap-2 px-6 py-1 rounded-full">
+          Prize Money
+        </h3>
+      </div>
+      <p className="text-5xl md:text-6xl font-bold flex items-center gap-2">
+        <BsCurrencyDollar size={50} />
+        {contest.prizeMoney}
+      </p>
+    </div>
+    <div>
+      <DeadlineCountDown contest={contest} />
+    </div>
+  </div>
+
+  {/* Winner */}
+  {contest.winnerId && (
+    <div className="bg-base-200 rounded-md p-10 mx-4 lg:mx-10 mt-5 transition-colors shadow-md hover:shadow-lg">
+      <h3 className="text-primary text-4xl md:text-5xl font-bold text-center mb-6">
+        Winner Declared
+      </h3>
+      <div className="flex flex-col items-center">
+        <img
+          src={contest.winnerPhoto}
+          alt={contest.winnerName}
+          className="rounded-full border-4 border-primary w-28 h-28 mb-4 shadow-md"
+        />
+        <h3 className="text-2xl md:text-3xl font-bold text-primary">
+          {contest.winnerName}
+        </h3>
+      </div>
+    </div>
+  )}
+
+  {/* Registration & Submission */}
+  {new Date() < new Date(contest.deadline) && (
+    <>
+      <div className="mx-4 lg:mx-10 mt-5">
+        {participantLoading || participationLoading ? (
+          <Spinner />
+        ) : (
+          <button
+            onClick={handlePayment}
+            disabled={participation?.paymentStatus === "paid"}
+            className={`btn btn-secondary w-full text-white text-2xl md:text-3xl font-bold py-7 rounded-md transition-all duration-300 ${
+              participation?.paymentStatus === "paid" && "btn-disabled"
+            } hover:bg-primary`}
+          >
+            {participation?.paymentStatus === "paid"
+              ? "Registered"
+              : "Register & Pay"}
+          </button>
+        )}
+      </div>
+
+      <div className="mx-4 lg:mx-10 p-5 bg-base-200 rounded-md mt-5 transition-colors shadow-md hover:shadow-lg">
+        <ul className="list-disc list-inside space-y-2 text-base-content/70 font-semibold text-base md:text-lg">
+          <li>You must register and pay to participate</li>
+          <li>Submit your task before the deadline</li>
+          <li>Winner will be announced after evaluation</li>
+        </ul>
+      </div>
+
+      {participation?.paymentStatus === "paid" && (
+        <div className="mx-4 lg:mx-10 mt-5">
+          {submissionLoading ? (
+            <Spinner />
+          ) : (
+            <button
+              onClick={handleSubmitModal}
+              disabled={submission}
+              className={`btn btn-secondary w-full text-white text-2xl md:text-3xl font-bold py-7 rounded-md transition-all duration-300 ${
+                submission && "btn-disabled"
+              } hover:bg-primary`}
+            >
+              Submit Task
+            </button>
+          )}
+          <dialog
+            ref={submitModalRef}
+            className="modal modal-bottom sm:modal-middle"
+          >
+            <div className="modal-box p-6 rounded-2xl shadow-xl">
+              <form method="dialog">
+                <button className="btn btn-circle btn-ghost absolute right-2 top-2">
+                  ✕
+                </button>
+              </form>
+              <div className="mt-5">
+                <form onSubmit={handleSubmit(handleSubmission)}>
+                  <fieldset className="fieldset space-y-3">
+                    <textarea
+                      className="textarea textarea-bordered w-full h-32 resize-none"
+                      placeholder="Provide necessary links"
+                      {...register("submissionLink", {
+                        required: "SubmissionLink is required",
+                      })}
+                    ></textarea>
+                    {errors.submissionLink && (
+                      <p className="text-red-500 font-bold mt-1">
+                        {errors.submissionLink.message}
+                      </p>
+                    )}
+                    <button
+                      className="btn btn-primary w-full py-3 text-lg font-semibold hover:scale-105 transition-all"
+                      disabled={submission}
+                    >
+                      Submit
+                    </button>
+                  </fieldset>
+                </form>
+              </div>
+            </div>
+          </dialog>
+        </div>
+      )}
+    </>
+  )}
+</div>
+
   );
 };
 

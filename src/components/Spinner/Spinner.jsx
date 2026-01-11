@@ -1,10 +1,10 @@
 import React from 'react';
-import { HashLoader } from 'react-spinners';
+import logo from '../../assets/logo.png'
 
 const Spinner = () => {
     return (
         <div className='min-h-screen flex items-center justify-center'>
-            <HashLoader color="purple" size={100} />
+            <img src={logo} alt="loading...." className='w-24 h-24 animate-spin' />
         </div>
     );
 };

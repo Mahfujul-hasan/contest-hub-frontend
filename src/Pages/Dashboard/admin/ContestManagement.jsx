@@ -70,8 +70,8 @@ const ContestManagement = () => {
   };
   return (
     <div>
-      <h3 className="text-3xl font-bold text-center text-purple-500">
-        Manage All Users
+      <h3 className="text-3xl font-semibold text-center text-secondary">
+        Manage All Contests
       </h3>
       <div className="overflow-x-auto border-2 border-purple-200 rounded-3xl my-5 min-h-screen">
         <table className="table table-zebra">

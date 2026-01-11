@@ -7,7 +7,7 @@ const DeadlineCountDown = ({ contest }) => {
   const countdownRenderer = ({ days, hours, minutes, seconds, completed }) => {
     if (completed) {
       return (
-        <div className="text-center py-6 bg-red-50 rounded-3xl mt-10 flex flex-col items-center justify-center h-60 mx-5">
+        <div className="text-center py-6 bg-red-50 rounded-md mt-10 flex flex-col items-center justify-center h-60">
           <p className="text-3xl font-bold text-red-600">Contest Ended</p>
           <p className="text-gray-600 mt-2">
             Registration and submission are closed

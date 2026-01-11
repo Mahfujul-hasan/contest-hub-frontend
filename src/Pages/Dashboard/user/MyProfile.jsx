@@ -23,7 +23,7 @@ const MyProfile = () => {
   
 
   return (
-    <div className="bg-white rounded-2xl shadow-md min-h-screen mt-5 border border-gray-200">
+    <div className="bg-base-100 rounded-2xl shadow-md min-h-screen mt-5 border border-gray-200">
       <div className="p-10 ">
         <div className="flex justify-between ">
         <h3 className="text-2xl font-semibold text-primary">Profile Information</h3>
@@ -49,15 +49,15 @@ const MyProfile = () => {
         </fieldset>
         </form> 
       </div>
-      <div className="bg-purple-100 rounded-2xl mt-10">
+      <div className="bg-base-200 rounded-2xl mt-10">
         <h3 className="text-center text-xl font-semibold text-gray-700 pt-5">Win Percentage</h3>
         <PieCartUser loginUser={loginUser}/>
         <div className="grid grid-cols-2 gap-5 p-5">
-            <div className="bg-white rounded-2xl text-center py-10">
+            <div className="bg-base-100 rounded-2xl text-center py-10">
                 <h3 className="text-2xl font-extrabold text-purple-700">{loginUser.totalParticipations}</h3>
                 <p>Total Participated</p>
             </div>
-            <div className="bg-white rounded-2xl text-center py-8">
+            <div className="bg-base-100 rounded-2xl text-center py-8">
                 <h3 className="text-2xl font-extrabold text-green-700">{loginUser.totalWins}</h3>
                 <p>Total Won</p>
             </div>

@@ -1,133 +1,132 @@
-import React from "react";
-import webLogo from "../../assets/contestHubLogo.png";
-import { useForm, useWatch, Watch } from "react-hook-form";
-import axios from "axios";
+import { useForm, useWatch } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
-import SocialLogin from "../../components/socialLogin/SocialLogin";
-import useAuth from "../../hook/useAuth";
-import useAxiosSecure from "../../hook/useAxiosSecure";
+import axios from "axios";
 import Swal from "sweetalert2";
 
+import SocialLogin from "../../components/socialLogin/SocialLogin";
+import Logo from "../../components/Logo/Logo";
+import useAuth from "../../hook/useAuth";
+import useAxiosSecure from "../../hook/useAxiosSecure";
+
 const Register = () => {
-  const { createUser, updateUserProfile} = useAuth();
+  const { createUser, updateUserProfile } = useAuth();
   const axiosSecure = useAxiosSecure();
   const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
-    formState: { errors },
     control,
+    formState: { errors },
   } = useForm();
-  const passwordValue = useWatch({ control, name: "password" });
 
-  const handleRegister = async (data) => {
-    const profileImage = data.photoURL[0];
+  const password = useWatch({ control, name: "password" });
 
-    createUser(data.email, data.password, data.displayName)
-      .then(() => {
-        const formData = new FormData();
-        formData.append("image", profileImage);
-        const url = `https://api.imgbb.com/1/upload?key=${
-          import.meta.env.VITE_IMGBB_KEY
-        }`;
+  const showSuccess = (message) => {
+    Swal.fire({
+      position: "center",
+      icon: "success",
+      title: message,
+      showConfirmButton: false,
+      timer: 2000,
+    });
+  };
 
-        axios.post(url, formData).then((res) => {
-          const photoURL = res.data?.data?.image.url;
-          const updateUser = {
-            displayName: data.displayName,
-            photoURL: photoURL,
-          };
+  const showError = (message) => {
+    Swal.fire({
+      icon: "error",
+      title: "Registration Failed",
+      text: message,
+    });
+  };
 
-          // create user profile in the database
-          const userInfo = {
-            displayName: data.displayName,
-            email: data.email,
-            photoURL: photoURL,
-          };
+  const uploadImage = async (imageFile) => {
+    const formData = new FormData();
+    formData.append("image", imageFile);
 
-          axiosSecure
-            .post("/users", userInfo)
-            .then((res) => {
-              if (res.data.insertedId) {
-                console.log("the user is added");
-              }
-            })
-            .catch((error) => {
-              console.log(error);
-            });
+    const url = `https://api.imgbb.com/1/upload?key=${
+      import.meta.env.VITE_IMGBB_KEY
+    }`;
 
-          // update user profile to firebase
-          updateUserProfile(updateUser)
-            .then(() => {
-              Swal.fire({
-                position: "center",
-                icon: "success",
-                title: "Your registration have been done. please login",
-                showConfirmButton: false,
-                timer: 2000,
-              });
-            })
-            .catch((error) => {
-              console.log(error);
-            });
-        });
-        navigate("/login");
-      })
-      .catch((error) => {
-        Swal.fire({
-          icon: "error",
-          title:`${error.code}`,
+    const res = await axios.post(url, formData);
+    return res.data?.data?.image?.url;
+  };
 
-        });
+
+  const onSubmit = async (data) => {
+    try {
+      const imageFile = data.photoURL[0];
+
+      // 1. Create auth user
+      await createUser(data.email, data.password);
+
+      // 2. Upload image
+      const photoURL = await uploadImage(imageFile);
+
+      // 3. Update Firebase profile
+      await updateUserProfile({
+        displayName: data.displayName,
+        photoURL,
       });
 
+      // 4. Save user in database
+      await axiosSecure.post("/users", {
+        displayName: data.displayName,
+        email: data.email,
+        photoURL,
+      });
 
+      showSuccess("Registration successful! Please login.");
+      navigate("/login");
+    } catch (error) {
+      showError(error.message || "Something went wrong");
+    }
   };
+
   return (
-    <div className="min-h-screen max-w-[1440px] mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 items-center">
-      <div className="bg-blue-100 h-full flex items-center">
-        <img src={webLogo} alt="" />
-      </div>
-      <div className="p-5 w-[90%]">
-        <h3 className="text-2xl md:text-4xl lg:text-4xl font-bold mb-5 text-primary text-center">
-          Create an account on contestHub
+    <div className="min-h-screen max-w-[1440px] mx-auto flex items-center justify-center">
+      <div className="p-6 w-full max-w-xl">
+        {/* Logo */}
+        <div className="flex justify-center mb-3">
+          <Logo />
+        </div>
+
+        {/* Title */}
+        <h3 className="text-2xl md:text-3xl font-bold mb-2 text-primary text-center">
+          Create an account
         </h3>
-        <form onSubmit={handleSubmit(handleRegister)}>
+
+        {/* Form */}
+        <form onSubmit={handleSubmit(onSubmit)} noValidate>
           <fieldset className="fieldset">
-            {/* name  */}
-            <label className="label text-base font-semibold text-black">
-              Name
-            </label>
+            {/* Name */}
+            <label className="label font-semibold">Name</label>
             <input
               type="text"
               className="input w-full"
-              placeholder="Name"
+              placeholder="Your name"
               {...register("displayName", { required: "Name is required" })}
             />
             {errors.displayName && (
-              <p className="text-red-400 font-medium">
+              <p className="text-red-500 text-sm">
                 {errors.displayName.message}
               </p>
             )}
 
-            {/* email  */}
-            <label className="label text-base font-semibold text-black">
-              Email
-            </label>
+            {/* Email */}
+            <label className="label font-semibold">Email</label>
             <input
               type="email"
               className="input w-full"
-              placeholder="Email"
+              placeholder="Your email"
               {...register("email", { required: "Email is required" })}
             />
             {errors.email && (
-              <p className="text-red-400 font-medium">{errors.email.message}</p>
+              <p className="text-red-500 text-sm">{errors.email.message}</p>
             )}
 
-            {/* password  */}
-            <label className="label text-base font-semibold text-black">
-              Password
-            </label>
+            {/* Password */}
+            <label className="label font-semibold">Password</label>
             <input
               type="password"
               className="input w-full"
@@ -138,20 +137,18 @@ const Register = () => {
                   value:
                     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&]).{6,}$/,
                   message:
-                    "Password must include upper, lower, number & special character and at least 6 characters.",
+                    "Must include upper, lower, number & special character",
                 },
               })}
             />
             {errors.password && (
-              <p className="text-red-400 font-medium">
+              <p className="text-red-500 text-sm">
                 {errors.password.message}
               </p>
             )}
 
-            {/* confirm password  */}
-            <label className="label text-base font-semibold text-black">
-              Confirm password
-            </label>
+            {/* Confirm Password */}
+            <label className="label font-semibold">Confirm Password</label>
             <input
               type="password"
               className="input w-full"
@@ -159,38 +156,46 @@ const Register = () => {
               {...register("confirmPassword", {
                 required: "Confirm your password",
                 validate: (value) =>
-                  value === passwordValue || "Password do not match",
+                  value === password || "Passwords do not match",
               })}
             />
             {errors.confirmPassword && (
-              <p className="text-red-400 font-medium">
+              <p className="text-red-500 text-sm">
                 {errors.confirmPassword.message}
               </p>
             )}
 
-            <label className="label text-base font-semibold text-black">
-              Upload your photo
-            </label>
+            {/* Photo */}
+            <label className="label font-semibold">Profile Photo</label>
             <input
               type="file"
               className="file-input file-input-ghost"
               {...register("photoURL", { required: "Photo is required" })}
             />
+            {errors.photoURL && (
+              <p className="text-red-500 text-sm">
+                {errors.photoURL.message}
+              </p>
+            )}
 
-            {/* register button  */}
-            <button className="btn btn-primary mt-4">Register</button>
+            {/* Submit */}
+            <button className="btn btn-primary w-full mt-1">
+              Register
+            </button>
           </fieldset>
         </form>
-        <p className="text-center">
-          Already have an account? please{" "}
+
+        {/* Login link */}
+        <p className="text-center mt-1">
+          Already have an account?{" "}
           <Link to="/login" className="link text-primary">
             Login
           </Link>
         </p>
+
+        {/* Social login */}
         <div className="divider">or</div>
-        <div className="w-full">
-          <SocialLogin />
-        </div>
+        <SocialLogin />
       </div>
     </div>
   );

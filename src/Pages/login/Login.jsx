@@ -69,7 +69,7 @@ const Login = () => {
       Swal.fire({
         icon: "error",
         title: "Demo Login Failed",
-        text: "Something went wrong. Please try again.",
+        text: `${error.code}.Please try again`,
       });
     }
   };
